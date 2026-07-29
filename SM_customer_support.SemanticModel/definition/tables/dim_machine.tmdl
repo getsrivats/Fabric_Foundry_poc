@@ -7,6 +7,13 @@ table dim_machine
 		summarizeBy: none
 		sourceColumn: machine_key
 
+	/// Machine PIN natural key; join key for service/usage/MPO facts. Populate in gold load from the machine master PIN.
+	column machine_pin
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: machine_pin
+
 	/// inv.WOD_2__Serial_Number__c
 	column serial_number
 		dataType: string
