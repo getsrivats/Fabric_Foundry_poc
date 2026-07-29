@@ -1,18 +1,15 @@
-/// Relates dim_dealer to fact_warranty_claim on dealer_code. (dim_dealer is SCD2 - assumes current-row semantics; resolve if versioned joins needed)
 relationship rel_fact_warranty_claim_dealer_code
 	fromColumn: fact_warranty_claim.dealer_code
 	toColumn: dim_dealer.dealer_code
 	crossFilteringBehavior: oneDirection
 	isActive: true
 
-/// Relates dim_date to fact_warranty_claim on submit_date_key.
 relationship rel_fact_warranty_claim_submit_date_key
 	fromColumn: fact_warranty_claim.submit_date_key
 	toColumn: dim_date.date_key
 	crossFilteringBehavior: oneDirection
 	isActive: true
 
-/// Relates dim_material to fact_warranty_claim_part on material.
 relationship rel_fact_warranty_claim_part_material
 	fromColumn: fact_warranty_claim_part.material
 	toColumn: dim_material.material

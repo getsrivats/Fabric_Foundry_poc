@@ -1,116 +1,99 @@
-/// Relates dim_date to fact_fill_rate on reporting_date_key.
 relationship rel_fact_fill_rate_reporting_date_key
 	fromColumn: fact_fill_rate.reporting_date_key
 	toColumn: dim_date.date_key
 	crossFilteringBehavior: oneDirection
 	isActive: true
 
-/// Relates dim_date to fact_fill_rate on order_date_key. Inactive role-playing date relationship (activate with USERELATIONSHIP in measures).
 relationship rel_fact_fill_rate_order_date_key
 	fromColumn: fact_fill_rate.order_date_key
 	toColumn: dim_date.date_key
 	crossFilteringBehavior: oneDirection
 	isActive: false
 
-/// Relates dim_dealer to fact_fill_rate on dealer_code. (dim_dealer is SCD2 - assumes current-row semantics; resolve if versioned joins needed)
 relationship rel_fact_fill_rate_dealer_code
 	fromColumn: fact_fill_rate.dealer_code
 	toColumn: dim_dealer.dealer_code
 	crossFilteringBehavior: oneDirection
 	isActive: true
 
-/// Relates dim_material to fact_fill_rate on material.
 relationship rel_fact_fill_rate_material
 	fromColumn: fact_fill_rate.material
 	toColumn: dim_material.material
 	crossFilteringBehavior: oneDirection
 	isActive: true
 
-/// Relates dim_date to fact_backorder on order_date_key.
 relationship rel_fact_backorder_order_date_key
 	fromColumn: fact_backorder.order_date_key
 	toColumn: dim_date.date_key
 	crossFilteringBehavior: oneDirection
 	isActive: true
 
-/// Relates dim_date to fact_backorder on closed_date_key. Inactive role-playing date relationship (activate with USERELATIONSHIP in measures).
 relationship rel_fact_backorder_closed_date_key
 	fromColumn: fact_backorder.closed_date_key
 	toColumn: dim_date.date_key
 	crossFilteringBehavior: oneDirection
 	isActive: false
 
-/// Relates dim_dealer to fact_backorder on dealer_code. (dim_dealer is SCD2 - assumes current-row semantics; resolve if versioned joins needed)
 relationship rel_fact_backorder_dealer_code
 	fromColumn: fact_backorder.dealer_code
 	toColumn: dim_dealer.dealer_code
 	crossFilteringBehavior: oneDirection
 	isActive: true
 
-/// Relates dim_material to fact_backorder on material.
 relationship rel_fact_backorder_material
 	fromColumn: fact_backorder.material
 	toColumn: dim_material.material
 	crossFilteringBehavior: oneDirection
 	isActive: true
 
-/// Relates dim_date to fact_ots_shipment on create_date_key.
 relationship rel_fact_ots_shipment_create_date_key
 	fromColumn: fact_ots_shipment.create_date_key
 	toColumn: dim_date.date_key
 	crossFilteringBehavior: oneDirection
 	isActive: true
 
-/// Relates dim_dealer to fact_ots_shipment on dealer_code. (dim_dealer is SCD2 - assumes current-row semantics; resolve if versioned joins needed)
 relationship rel_fact_ots_shipment_dealer_code
 	fromColumn: fact_ots_shipment.dealer_code
 	toColumn: dim_dealer.dealer_code
 	crossFilteringBehavior: oneDirection
 	isActive: true
 
-/// Relates dim_material to fact_ots_shipment on material.
 relationship rel_fact_ots_shipment_material
 	fromColumn: fact_ots_shipment.material
 	toColumn: dim_material.material
 	crossFilteringBehavior: oneDirection
 	isActive: true
 
-/// Relates dim_plant to fact_ots_shipment on plant.
 relationship rel_fact_ots_shipment_plant
 	fromColumn: fact_ots_shipment.plant
 	toColumn: dim_plant.plant
 	crossFilteringBehavior: oneDirection
 	isActive: true
 
-/// Relates dim_date to fact_storage_bin_snapshot on snapshot_date_key.
 relationship rel_fact_storage_bin_snapshot_snapshot_date_key
 	fromColumn: fact_storage_bin_snapshot.snapshot_date_key
 	toColumn: dim_date.date_key
 	crossFilteringBehavior: oneDirection
 	isActive: true
 
-/// Relates dim_plant to fact_storage_bin_snapshot on plant.
 relationship rel_fact_storage_bin_snapshot_plant
 	fromColumn: fact_storage_bin_snapshot.plant
 	toColumn: dim_plant.plant
 	crossFilteringBehavior: oneDirection
 	isActive: true
 
-/// Relates dim_material to fact_storage_bin_snapshot on material.
 relationship rel_fact_storage_bin_snapshot_material
 	fromColumn: fact_storage_bin_snapshot.material
 	toColumn: dim_material.material
 	crossFilteringBehavior: oneDirection
 	isActive: true
 
-/// Relates dim_date to fact_cycle_count on count_date_key.
 relationship rel_fact_cycle_count_count_date_key
 	fromColumn: fact_cycle_count.count_date_key
 	toColumn: dim_date.date_key
 	crossFilteringBehavior: oneDirection
 	isActive: true
 
-/// Relates dim_material to fact_cycle_count on material.
 relationship rel_fact_cycle_count_material
 	fromColumn: fact_cycle_count.material
 	toColumn: dim_material.material

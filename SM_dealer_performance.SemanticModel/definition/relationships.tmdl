@@ -1,4 +1,3 @@
-/// Relates dim_date to fact_ecom_order_item on order_date_key.
 relationship rel_fact_ecom_order_item_order_date_key
 	fromColumn: fact_ecom_order_item.order_date_key
 	toColumn: dim_date.date_key
