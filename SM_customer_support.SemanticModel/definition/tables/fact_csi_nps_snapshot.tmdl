@@ -1,0 +1,68 @@
+/// FACT - fact_csi_nps_snapshot. Grain: One row per dealer per period per metric set.
+table fact_csi_nps_snapshot
+	/// Primary/surrogate key. dealer_code
+	column dealer_code
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: dealer_code
+
+	/// Foreign key to dimension. period_key
+	column period_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: period_key
+
+	/// 'PERIOD'
+	column metric_scope
+		dataType: string
+		summarizeBy: none
+		sourceColumn: metric_scope
+
+	/// responses
+	column responses
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: responses
+
+	/// promoters
+	column promoters
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: promoters
+
+	/// passives
+	column passives
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: passives
+
+	/// detractors
+	column detractors
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: detractors
+
+	/// (promoters - detractors) * 100.0 / NULLIF(responses,0)
+	column nps
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: nps
+
+	/// csi_score
+	column csi_score
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: csi_score
+
+	/// Number of rows (records) in fact_csi_nps_snapshot.
+	measure 'fact_csi_nps_snapshot Row Count' = COUNTROWS(fact_csi_nps_snapshot)
+		formatString: #,0
+
+	partition fact_csi_nps_snapshot = entity
+		mode: directLake
+		source
+			entityName: fact_csi_nps_snapshot
+			schemaName: customer_support
+			expressionSource: GoldSqlEndpoint

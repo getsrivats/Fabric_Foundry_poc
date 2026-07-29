@@ -1,0 +1,121 @@
+/// FACT - fact_cycle_count. Grain: One row per count document line.
+table fact_cycle_count
+	/// Primary/surrogate key. CAST(CONVERT(VARCHAR(8), cc.Count_Date, 112) AS INT)
+	column count_date_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: count_date_key
+
+	/// cc.DOC_NUMBER
+	column doc_number
+		dataType: string
+		summarizeBy: none
+		sourceColumn: doc_number
+
+	/// cc.ITEM_NO
+	column item_no
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: item_no
+
+	/// cc.MATNR
+	column material
+		dataType: string
+		summarizeBy: none
+		sourceColumn: material
+
+	/// cc.LGNUM
+	column wh_no
+		dataType: string
+		summarizeBy: none
+		sourceColumn: wh_no
+
+	/// cc.LGTYP
+	column storage_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: storage_type
+
+	/// cc.LGPLA
+	column storage_bin
+		dataType: string
+		summarizeBy: none
+		sourceColumn: storage_bin
+
+	/// cc.BOOKED_QTY
+	column booked_qty
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: booked_qty
+
+	/// cc.COUNTED_QTY
+	column counted_qty
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: counted_qty
+
+	/// cc.DIFFERENCE_QTY
+	column difference_qty
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: difference_qty
+
+	/// cc.BOOKED_VALUE
+	column booked_value
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: booked_value
+
+	/// cc.COUNTED_VALUE
+	column counted_value
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: counted_value
+
+	/// cc.DIFFERENCE_VALUE
+	column difference_value
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: difference_value
+
+	/// CASE WHEN cc.IND_ZERO_COUNT = 'X' THEN 1 ELSE 0 END
+	column zero_count_flag
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: zero_count_flag
+
+	/// Number of rows (records) in fact_cycle_count.
+	measure 'fact_cycle_count Row Count' = COUNTROWS(fact_cycle_count)
+		formatString: #,0
+
+	/// Sum of booked qty across the current filter context.
+	measure 'Total Booked Qty' = SUM(fact_cycle_count[booked_qty])
+		formatString: #,0.00
+
+	/// Sum of counted qty across the current filter context.
+	measure 'Total Counted Qty' = SUM(fact_cycle_count[counted_qty])
+		formatString: #,0.00
+
+	/// Sum of difference qty across the current filter context.
+	measure 'Total Difference Qty' = SUM(fact_cycle_count[difference_qty])
+		formatString: #,0.00
+
+	/// Sum of booked value across the current filter context.
+	measure 'Total Booked Value' = SUM(fact_cycle_count[booked_value])
+		formatString: #,0.00
+
+	/// Sum of counted value across the current filter context.
+	measure 'Total Counted Value' = SUM(fact_cycle_count[counted_value])
+		formatString: #,0.00
+
+	/// Sum of difference value across the current filter context.
+	measure 'Total Difference Value' = SUM(fact_cycle_count[difference_value])
+		formatString: #,0.00
+
+	partition fact_cycle_count = entity
+		mode: directLake
+		source
+			entityName: fact_cycle_count
+			schemaName: order_fulfillment
+			expressionSource: GoldSqlEndpoint

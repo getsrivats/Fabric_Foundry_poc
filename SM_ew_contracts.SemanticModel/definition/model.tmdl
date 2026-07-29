@@ -1,0 +1,9 @@
+/// Direct Lake semantic model for D10 EW & Maintenance Contracts. Facts and conformed dimensions from the Gold warehouse; ratio/derived KPIs implemented as measures.
+model SM_ew_contracts
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+
+ref table fact_warranty_registration
+ref table fact_ew_contract
+ref table dim_date
+ref table dim_dealer

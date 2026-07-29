@@ -1,0 +1,62 @@
+/// Relates dim_machine to fact_service_case on machine_pin.
+relationship rel_fact_service_case_machine_pin
+	fromColumn: fact_service_case.machine_pin
+	toColumn: dim_machine.machine_pin
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_date to fact_service_case on open_date_key.
+relationship rel_fact_service_case_open_date_key
+	fromColumn: fact_service_case.open_date_key
+	toColumn: dim_date.date_key
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_date to fact_service_case on closed_date_key. Inactive role-playing date relationship (activate with USERELATIONSHIP in measures).
+relationship rel_fact_service_case_closed_date_key
+	fromColumn: fact_service_case.closed_date_key
+	toColumn: dim_date.date_key
+	crossFilteringBehavior: oneDirection
+	isActive: false
+
+/// Relates dim_date to fact_osd_claim on open_date_key.
+relationship rel_fact_osd_claim_open_date_key
+	fromColumn: fact_osd_claim.open_date_key
+	toColumn: dim_date.date_key
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_date to fact_call_interaction on date_key.
+relationship rel_fact_call_interaction_date_key
+	fromColumn: fact_call_interaction.date_key
+	toColumn: dim_date.date_key
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_date to fact_agent_daily on snapshot_date_key.
+relationship rel_fact_agent_daily_snapshot_date_key
+	fromColumn: fact_agent_daily.snapshot_date_key
+	toColumn: dim_date.date_key
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_date to fact_survey_response on recorded_date_key.
+relationship rel_fact_survey_response_recorded_date_key
+	fromColumn: fact_survey_response.recorded_date_key
+	toColumn: dim_date.date_key
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_dealer to fact_csi_nps_snapshot on dealer_code. (dim_dealer is SCD2 - assumes current-row semantics; resolve if versioned joins needed)
+relationship rel_fact_csi_nps_snapshot_dealer_code
+	fromColumn: fact_csi_nps_snapshot.dealer_code
+	toColumn: dim_dealer.dealer_code
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_date to fact_csi_nps_snapshot on period_key.
+relationship rel_fact_csi_nps_snapshot_period_key
+	fromColumn: fact_csi_nps_snapshot.period_key
+	toColumn: dim_date.date_key
+	crossFilteringBehavior: oneDirection
+	isActive: true

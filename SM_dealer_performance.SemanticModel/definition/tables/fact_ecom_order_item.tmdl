@@ -1,0 +1,80 @@
+/// FACT - fact_ecom_order_item. Grain: One row per KCOM order line.
+table fact_ecom_order_item
+	/// Primary/surrogate key. d.OrderNumber
+	column order_number
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: order_number
+
+	/// d.Sku
+	column sku
+		dataType: string
+		summarizeBy: none
+		sourceColumn: sku
+
+	/// Foreign key to dimension. CAST(CONVERT(VARCHAR(8), o.OrderDate, 112) AS INT)
+	column order_date_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: order_date_key
+
+	/// o.LocationNumber
+	column location_number
+		dataType: string
+		summarizeBy: none
+		sourceColumn: location_number
+
+	/// o.OrderStatus
+	column order_status
+		dataType: string
+		summarizeBy: none
+		sourceColumn: order_status
+
+	/// d.Qty
+	column qty
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: qty
+
+	/// d.Price
+	column price
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: price
+
+	/// d.Cost
+	column cost
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: cost
+
+	/// d.Segment
+	column segment
+		dataType: string
+		summarizeBy: none
+		sourceColumn: segment
+
+	/// Number of rows (records) in fact_ecom_order_item.
+	measure 'fact_ecom_order_item Row Count' = COUNTROWS(fact_ecom_order_item)
+		formatString: #,0
+
+	/// Sum of qty across the current filter context.
+	measure 'Total Qty' = SUM(fact_ecom_order_item[qty])
+		formatString: #,0.00
+
+	/// Sum of price across the current filter context.
+	measure 'Total Price' = SUM(fact_ecom_order_item[price])
+		formatString: #,0.00
+
+	/// Sum of cost across the current filter context.
+	measure 'Total Cost' = SUM(fact_ecom_order_item[cost])
+		formatString: #,0.00
+
+	partition fact_ecom_order_item = entity
+		mode: directLake
+		source
+			entityName: fact_ecom_order_item
+			schemaName: dealer_performance
+			expressionSource: GoldSqlEndpoint

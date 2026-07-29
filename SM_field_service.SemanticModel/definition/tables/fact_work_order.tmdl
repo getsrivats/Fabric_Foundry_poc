@@ -1,0 +1,118 @@
+/// FACT - fact_work_order. Grain: One row per work order (unique document).
+table fact_work_order
+	/// Primary/surrogate key. w.UniqueDocumentID
+	column unique_document_id
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: unique_document_id
+
+	/// w.InvoiceNumber
+	column invoice_number
+		dataType: string
+		summarizeBy: none
+		sourceColumn: invoice_number
+
+	/// TRIM(LEADING '0' FROM w.DealerCode)
+	column dealer_code
+		dataType: string
+		summarizeBy: none
+		sourceColumn: dealer_code
+
+	/// w.SerialNumber
+	column serial_number
+		dataType: string
+		summarizeBy: none
+		sourceColumn: serial_number
+
+	/// w.Model
+	column model
+		dataType: string
+		summarizeBy: none
+		sourceColumn: model
+
+	/// w.InitiationDate
+	column initiation_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: initiation_date
+
+	/// w.CompletionDate
+	column completion_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: completion_date
+
+	/// Foreign key to dimension. CAST(CONVERT(VARCHAR(8), w.BillingDate,112) AS INT)
+	column billing_date_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: billing_date_key
+
+	/// w.MachineHoursIn
+	column machine_hours_in
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: machine_hours_in
+
+	/// w.MachineHoursOut
+	column machine_hours_out
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: machine_hours_out
+
+	/// w.InvoiceTotal
+	column invoice_total
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: invoice_total
+
+	/// w.InvoiceSalesTaxTotal
+	column sales_tax_total
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: sales_tax_total
+
+	/// CASE WHEN w.IsVoided='1' THEN 1 ELSE 0 END
+	column is_voided
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: is_voided
+
+	/// (SELECT COUNT(*) FROM LH_Silver.dbo.WO_JOBSEGMENTS s WHERE s.UniqueDocumentID = w.UniqueDocumentID)
+	column segment_count
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: segment_count
+
+	/// Number of rows (records) in fact_work_order.
+	measure 'fact_work_order Row Count' = COUNTROWS(fact_work_order)
+		formatString: #,0
+
+	/// Sum of machine hours in across the current filter context.
+	measure 'Total Machine Hours In' = SUM(fact_work_order[machine_hours_in])
+		formatString: #,0.00
+
+	/// Sum of machine hours out across the current filter context.
+	measure 'Total Machine Hours Out' = SUM(fact_work_order[machine_hours_out])
+		formatString: #,0.00
+
+	/// Sum of invoice total across the current filter context.
+	measure 'Total Invoice Total' = SUM(fact_work_order[invoice_total])
+		formatString: #,0.00
+
+	/// Sum of sales tax total across the current filter context.
+	measure 'Total Sales Tax Total' = SUM(fact_work_order[sales_tax_total])
+		formatString: #,0.00
+
+	/// Sum of segment count across the current filter context.
+	measure 'Total Segment Count' = SUM(fact_work_order[segment_count])
+		formatString: #,0
+
+	partition fact_work_order = entity
+		mode: directLake
+		source
+			entityName: fact_work_order
+			schemaName: field_service
+			expressionSource: GoldSqlEndpoint

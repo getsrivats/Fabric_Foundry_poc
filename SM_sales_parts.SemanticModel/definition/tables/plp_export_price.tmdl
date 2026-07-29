@@ -1,0 +1,39 @@
+/// PLP - plp_export_price. Grain: One row per material per validity window.
+table plp_export_price
+	/// Primary/surrogate key. ep.MATERIAL
+	column material
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: material
+
+	/// ep.VALID_FROM
+	column valid_from
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: valid_from
+
+	/// ep.VALID_TO
+	column valid_to
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: valid_to
+
+	/// ep.EXPORT_PRICE
+	column export_price
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: export_price
+
+	/// ep.CURRENCY
+	column currency
+		dataType: string
+		summarizeBy: none
+		sourceColumn: currency
+
+	partition plp_export_price = entity
+		mode: directLake
+		source
+			entityName: plp_export_price
+			schemaName: sales_parts
+			expressionSource: GoldSqlEndpoint

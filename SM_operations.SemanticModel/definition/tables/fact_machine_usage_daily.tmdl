@@ -1,0 +1,72 @@
+/// FACT - fact_machine_usage_daily. Grain: One row per machine per day (telematics) / per model x customer type (modeled).
+table fact_machine_usage_daily
+	/// Primary/surrogate key. m.PIN
+	column machine_pin
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: machine_pin
+
+	/// m.Model
+	column model
+		dataType: string
+		summarizeBy: none
+		sourceColumn: model
+
+	/// NULL
+	column base_model
+		dataType: string
+		summarizeBy: none
+		sourceColumn: base_model
+
+	/// NULL
+	column customer_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: customer_type
+
+	/// Foreign key to dimension. CAST(CONVERT(VARCHAR(8), m.Date_Modified,112) AS INT)
+	column usage_date_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: usage_date_key
+
+	/// m.Engine_Hours
+	column engine_hours
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: engine_hours
+
+	/// NULL
+	column avg_daily_usage
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: avg_daily_usage
+
+	/// NULL
+	column avg_age_days
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: avg_age_days
+
+	/// 'MYKUBOTA'
+	column source_system
+		dataType: string
+		summarizeBy: none
+		sourceColumn: source_system
+
+	/// Number of rows (records) in fact_machine_usage_daily.
+	measure 'fact_machine_usage_daily Row Count' = COUNTROWS(fact_machine_usage_daily)
+		formatString: #,0
+
+	/// Sum of engine hours across the current filter context.
+	measure 'Total Engine Hours' = SUM(fact_machine_usage_daily[engine_hours])
+		formatString: #,0.00
+
+	partition fact_machine_usage_daily = entity
+		mode: directLake
+		source
+			entityName: fact_machine_usage_daily
+			schemaName: operations
+			expressionSource: GoldSqlEndpoint

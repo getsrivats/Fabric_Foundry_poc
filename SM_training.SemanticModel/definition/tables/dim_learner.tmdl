@@ -1,0 +1,82 @@
+/// DIM - dim_learner (dim_user). Grain: One row per LMS user.
+table dim_learner
+	/// Primary/surrogate key. u.USER_KEY
+	column user_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: user_key
+
+	/// u.USER_ID
+	column user_id
+		dataType: string
+		summarizeBy: none
+		sourceColumn: user_id
+
+	/// u.FULLNAME
+	column full_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: full_name
+
+	/// u.EMAIL_ADDRESS
+	column email
+		dataType: string
+		summarizeBy: none
+		sourceColumn: email
+
+	/// u.JOB_TITLE
+	column job_title
+		dataType: string
+		summarizeBy: none
+		sourceColumn: job_title
+
+	/// Foreign key to dimension. u.DEPARTMENT_KEY
+	column department_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: department_key
+
+	/// u.LOCATION_NAME
+	column location_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: location_name
+
+	/// TRIM(LEADING '0' FROM u.EMPLOYEE_NUMBER)
+	column dealer_code
+		dataType: string
+		summarizeBy: none
+		sourceColumn: dealer_code
+
+	/// -- dealer linkage: confirm mapping u.ACTIVE_STATUS
+	column active_status
+		dataType: string
+		summarizeBy: none
+		sourceColumn: active_status
+
+	/// CASE WHEN u.IS_LEARNER='1' THEN 1 ELSE 0 END
+	column is_learner
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: is_learner
+
+	/// CASE WHEN u.IS_INSTRUCTOR='1' THEN 1 ELSE 0 END
+	column is_instructor
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: is_instructor
+
+	/// u.DATE_HIRED
+	column date_hired
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: date_hired
+
+	partition dim_learner = entity
+		mode: directLake
+		source
+			entityName: dim_learner
+			schemaName: training
+			expressionSource: GoldSqlEndpoint

@@ -1,0 +1,165 @@
+/// DIM - dim_dealer (SCD2). Grain: One row per dealer per SCD2 validity window.
+table dim_dealer
+	/// Primary/surrogate key.
+	column dealer_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: dealer_key
+
+	/// Dealer Code attribute.
+	column dealer_code
+		dataType: string
+		summarizeBy: none
+		sourceColumn: dealer_code
+
+	/// Dealer Name attribute.
+	column dealer_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: dealer_name
+
+	/// Parent Dealer Code attribute.
+	column parent_dealer_code
+		dataType: string
+		summarizeBy: none
+		sourceColumn: parent_dealer_code
+
+	/// Parent Dealer Name attribute.
+	column parent_dealer_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: parent_dealer_name
+
+	/// Customer Group Code attribute.
+	column customer_group_code
+		dataType: string
+		summarizeBy: none
+		sourceColumn: customer_group_code
+
+	/// Customer Group Desc attribute.
+	column customer_group_desc
+		dataType: string
+		summarizeBy: none
+		sourceColumn: customer_group_desc
+
+	/// Division Number attribute.
+	column division_number
+		dataType: string
+		summarizeBy: none
+		sourceColumn: division_number
+
+	/// Division Name attribute.
+	column division_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: division_name
+
+	/// District Number attribute.
+	column district_number
+		dataType: string
+		summarizeBy: none
+		sourceColumn: district_number
+
+	/// District Name attribute.
+	column district_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: district_name
+
+	/// District Sales Manager attribute.
+	column district_sales_manager
+		dataType: string
+		summarizeBy: none
+		sourceColumn: district_sales_manager
+
+	/// Regional Sales Manager attribute.
+	column regional_sales_manager
+		dataType: string
+		summarizeBy: none
+		sourceColumn: regional_sales_manager
+
+	/// Parts Sales Manager attribute.
+	column parts_sales_manager
+		dataType: string
+		summarizeBy: none
+		sourceColumn: parts_sales_manager
+
+	/// Parts Facing Warehouse attribute.
+	column parts_facing_warehouse
+		dataType: string
+		summarizeBy: none
+		sourceColumn: parts_facing_warehouse
+
+	/// Wso Order Day attribute.
+	column wso_order_day
+		dataType: string
+		summarizeBy: none
+		sourceColumn: wso_order_day
+
+	/// Wso Shipping Day attribute.
+	column wso_shipping_day
+		dataType: string
+		summarizeBy: none
+		sourceColumn: wso_shipping_day
+
+	/// Smart Supply Flag attribute.
+	column smart_supply_flag
+		dataType: string
+		summarizeBy: none
+		sourceColumn: smart_supply_flag
+
+	/// Pt Contract attribute.
+	column pt_contract
+		dataType: string
+		summarizeBy: none
+		sourceColumn: pt_contract
+
+	/// Inception Date attribute.
+	column inception_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: inception_date
+
+	/// Cancellation Date attribute.
+	column cancellation_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: cancellation_date
+
+	/// Pbi Rls Group attribute.
+	column pbi_rls_group
+		dataType: string
+		summarizeBy: none
+		sourceColumn: pbi_rls_group
+
+	/// Hash Diff attribute.
+	column hash_diff
+		dataType: string
+		summarizeBy: none
+		sourceColumn: hash_diff
+
+	/// Effective From attribute.
+	column effective_from
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: effective_from
+
+	/// Effective To attribute.
+	column effective_to
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: effective_to
+
+	/// Is Current attribute.
+	column is_current
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: is_current
+
+	partition dim_dealer = entity
+		mode: directLake
+		source
+			entityName: dim_dealer
+			schemaName: conformed
+			expressionSource: GoldSqlEndpoint

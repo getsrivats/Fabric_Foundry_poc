@@ -1,0 +1,84 @@
+/// FACT - fact_service_campaign_member. Grain: One row per campaign x machine (member).
+table fact_service_campaign_member
+	/// Primary/surrogate key. m.Id
+	column member_sf_id
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: member_sf_id
+
+	/// m.Service_Campaign__c
+	column campaign_sf_id
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: campaign_sf_id
+
+	/// m.Serial_Number__c
+	column machine_serial
+		dataType: string
+		summarizeBy: none
+		sourceColumn: machine_serial
+
+	/// m.Material_Model_Number__c
+	column model
+		dataType: string
+		summarizeBy: none
+		sourceColumn: model
+
+	/// TRIM(LEADING '0' FROM m.Dealer_Code__c)
+	column dealer_code
+		dataType: string
+		summarizeBy: none
+		sourceColumn: dealer_code
+
+	/// TRIM(LEADING '0' FROM m.Parent_Dealer_Code__c)
+	column parent_dealer
+		dataType: string
+		summarizeBy: none
+		sourceColumn: parent_dealer
+
+	/// m.Status__c
+	column member_status
+		dataType: string
+		summarizeBy: none
+		sourceColumn: member_status
+
+	/// m.Claim_Status__c
+	column claim_status
+		dataType: string
+		summarizeBy: none
+		sourceColumn: claim_status
+
+	/// m.Sale_Date__c
+	column sale_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: sale_date
+
+	/// m.Total_Claim_Cost__c
+	column total_claim_cost
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: total_claim_cost
+
+	/// CASE WHEN m.Status__c = 'Completed' THEN 1 ELSE 0 END
+	column completed_flag
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: completed_flag
+
+	/// Number of rows (records) in fact_service_campaign_member.
+	measure 'fact_service_campaign_member Row Count' = COUNTROWS(fact_service_campaign_member)
+		formatString: #,0
+
+	/// Sum of total claim cost across the current filter context.
+	measure 'Total Total Claim Cost' = SUM(fact_service_campaign_member[total_claim_cost])
+		formatString: #,0.00
+
+	partition fact_service_campaign_member = entity
+		mode: directLake
+		source
+			entityName: fact_service_campaign_member
+			schemaName: field_service
+			expressionSource: GoldSqlEndpoint

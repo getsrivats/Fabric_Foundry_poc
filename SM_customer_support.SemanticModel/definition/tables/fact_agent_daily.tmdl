@@ -1,0 +1,98 @@
+/// FACT - fact_agent_daily. Grain: One row per agent per day.
+table fact_agent_daily
+	/// Primary/surrogate key. a.id
+	column agent_id
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: agent_id
+
+	/// a.name
+	column agent_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: agent_name
+
+	/// Foreign key to dimension. CAST(CONVERT(VARCHAR(8), a.snapshot_time,112) AS INT)
+	column snapshot_date_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: snapshot_date_key
+
+	/// a.offered
+	column offered
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: offered
+
+	/// a.accepted
+	column accepted
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: accepted
+
+	/// a.rejected
+	column rejected
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: rejected
+
+	/// a.handlingTime
+	column handling_secs
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: handling_secs
+
+	/// a.availableTime
+	column available_secs
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: available_secs
+
+	/// a.busyTime
+	column busy_secs
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: busy_secs
+
+	/// a.onBreakTime
+	column on_break_secs
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: on_break_secs
+
+	/// a.loggedInTime
+	column logged_in_secs
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: logged_in_secs
+
+	/// a.averageHandlingTime
+	column avg_handling_secs
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: avg_handling_secs
+
+	/// a.averageHoldTime
+	column avg_hold_secs
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: avg_hold_secs
+
+	/// a.transfersInitiated
+	column transfers
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: transfers
+
+	/// Number of rows (records) in fact_agent_daily.
+	measure 'fact_agent_daily Row Count' = COUNTROWS(fact_agent_daily)
+		formatString: #,0
+
+	partition fact_agent_daily = entity
+		mode: directLake
+		source
+			entityName: fact_agent_daily
+			schemaName: customer_support
+			expressionSource: GoldSqlEndpoint

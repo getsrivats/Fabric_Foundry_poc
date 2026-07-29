@@ -1,0 +1,39 @@
+/// DIM - dim_buyer. Grain: One row per purchasing group / buyer.
+table dim_buyer
+	/// Primary/surrogate key. ROW_NUMBER() OVER (ORDER BY s.PURCH_GRP)
+	column buyer_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: buyer_key
+
+	/// s.PURCH_GRP
+	column purch_grp
+		dataType: string
+		summarizeBy: none
+		sourceColumn: purch_grp
+
+	/// s.PURCH_GRP_DESC
+	column purch_grp_desc
+		dataType: string
+		summarizeBy: none
+		sourceColumn: purch_grp_desc
+
+	/// s.BUYER_NAME
+	column buyer_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: buyer_name
+
+	/// s.PURCH_ORG
+	column purch_org
+		dataType: string
+		summarizeBy: none
+		sourceColumn: purch_org
+
+	partition dim_buyer = entity
+		mode: directLake
+		source
+			entityName: dim_buyer
+			schemaName: procurement
+			expressionSource: GoldSqlEndpoint

@@ -1,0 +1,52 @@
+/// DIM - dim_course / dim_curriculum + bridge. Grain: One row per course / per curriculum / per curriculum-course pair.
+table dim_course
+	/// Primary/surrogate key. COURSE_KEY
+	column course_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: course_key
+
+	/// COURSE_ID
+	column course_id
+		dataType: string
+		summarizeBy: none
+		sourceColumn: course_id
+
+	/// COURSE_NAME
+	column course_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: course_name
+
+	/// COURSE_TYPE_NAME
+	column course_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: course_type
+
+	/// Foreign key to dimension. CATEGORY_KEY
+	column category_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: category_key
+
+	/// ACTIVE_STATUS
+	column active_status
+		dataType: string
+		summarizeBy: none
+		sourceColumn: active_status
+
+	/// CASE WHEN CERTIFICATE_ENABLED='1' THEN 1 ELSE 0 END
+	column certificate_enabled
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: certificate_enabled
+
+	partition dim_course = entity
+		mode: directLake
+		source
+			entityName: dim_course
+			schemaName: training
+			expressionSource: GoldSqlEndpoint

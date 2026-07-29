@@ -1,0 +1,99 @@
+/// DIM - dim_storage_bin. Grain: One row per warehouse bin.
+table dim_storage_bin
+	/// Primary/surrogate key. ROW_NUMBER() OVER (ORDER BY sb.WH_NO, sb.STORAGE_BIN)
+	column storage_bin_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: storage_bin_key
+
+	/// sb.WH_NO
+	column wh_no
+		dataType: string
+		summarizeBy: none
+		sourceColumn: wh_no
+
+	/// sb.STORAGE_BIN
+	column storage_bin
+		dataType: string
+		summarizeBy: none
+		sourceColumn: storage_bin
+
+	/// sb.PLANT
+	column plant
+		dataType: string
+		summarizeBy: none
+		sourceColumn: plant
+
+	/// sb.STORAGE_TYPE
+	column storage_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: storage_type
+
+	/// sb.STORAGE_TYPE_DESC
+	column storage_type_desc
+		dataType: string
+		summarizeBy: none
+		sourceColumn: storage_type_desc
+
+	/// sb.STORAGE_SECTION
+	column storage_section
+		dataType: string
+		summarizeBy: none
+		sourceColumn: storage_section
+
+	/// sb.STORAGE_BIN_TYPE
+	column bin_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: bin_type
+
+	/// sb.BIN_ACCESS_TYPE
+	column bin_access_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: bin_access_type
+
+	/// sb.BIN_AISLE
+	column bin_aisle
+		dataType: string
+		summarizeBy: none
+		sourceColumn: bin_aisle
+
+	/// sb.BIN_STACK
+	column bin_stack
+		dataType: string
+		summarizeBy: none
+		sourceColumn: bin_stack
+
+	/// sb.BIN_LEVEL
+	column bin_level
+		dataType: string
+		summarizeBy: none
+		sourceColumn: bin_level
+
+	/// sb.MAX_WEIGHT
+	column max_weight
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: max_weight
+
+	/// sb.MAX_VOLUME
+	column max_volume
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: max_volume
+
+	/// sb.MAX_CAPACITY
+	column max_capacity
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: max_capacity
+
+	partition dim_storage_bin = entity
+		mode: directLake
+		source
+			entityName: dim_storage_bin
+			schemaName: order_fulfillment
+			expressionSource: GoldSqlEndpoint

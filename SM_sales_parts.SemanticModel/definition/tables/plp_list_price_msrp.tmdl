@@ -1,0 +1,45 @@
+/// PLP - plp_list_price_msrp. Grain: One row per material per validity window.
+table plp_list_price_msrp
+	/// Primary/surrogate key. a.MATNR
+	column material
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: material
+
+	/// a.DATAB
+	column valid_from
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: valid_from
+
+	/// a.DATBI
+	column valid_to
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: valid_to
+
+	/// MAX(k.KBETR)
+	column list_price
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: list_price
+
+	/// -- MAX per KPI catalog rule MAX(k.KPEIN)
+	column price_unit
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: price_unit
+
+	/// MAX(k.KONWA)
+	column currency
+		dataType: string
+		summarizeBy: none
+		sourceColumn: currency
+
+	partition plp_list_price_msrp = entity
+		mode: directLake
+		source
+			entityName: plp_list_price_msrp
+			schemaName: sales_parts
+			expressionSource: GoldSqlEndpoint

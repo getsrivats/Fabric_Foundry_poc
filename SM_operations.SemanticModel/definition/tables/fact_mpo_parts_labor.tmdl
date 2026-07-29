@@ -1,0 +1,93 @@
+/// FACT - fact_mpo_parts_labor. Grain: One row per machine (or model) x maintenance package.
+table fact_mpo_parts_labor
+	/// Primary/surrogate key. cu.model
+	column model
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: model
+
+	/// cu.machine_pin
+	column machine_pin
+		dataType: string
+		summarizeBy: none
+		sourceColumn: machine_pin
+
+	/// cu.dealer_code
+	column dealer_code
+		dataType: string
+		summarizeBy: none
+		sourceColumn: dealer_code
+
+	/// pl.package_name
+	column maint_package
+		dataType: string
+		summarizeBy: none
+		sourceColumn: maint_package
+
+	/// pl.interval_hours
+	column interval_hours
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: interval_hours
+
+	/// cu.units_in_operation
+	column units_in_op
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: units_in_op
+
+	/// pl.parts_value
+	column parts_value
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: parts_value
+
+	/// pl.labor_hours
+	column labor_hours
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: labor_hours
+
+	/// pl.labor_value
+	column labor_value
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: labor_value
+
+	/// pl.parts_value + pl.labor_value
+	column total_opportunity
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: total_opportunity
+
+	/// Number of rows (records) in fact_mpo_parts_labor.
+	measure 'fact_mpo_parts_labor Row Count' = COUNTROWS(fact_mpo_parts_labor)
+		formatString: #,0
+
+	/// Sum of interval hours across the current filter context.
+	measure 'Total Interval Hours' = SUM(fact_mpo_parts_labor[interval_hours])
+		formatString: #,0
+
+	/// Sum of parts value across the current filter context.
+	measure 'Total Parts Value' = SUM(fact_mpo_parts_labor[parts_value])
+		formatString: #,0.00
+
+	/// Sum of labor hours across the current filter context.
+	measure 'Total Labor Hours' = SUM(fact_mpo_parts_labor[labor_hours])
+		formatString: #,0.00
+
+	/// Sum of labor value across the current filter context.
+	measure 'Total Labor Value' = SUM(fact_mpo_parts_labor[labor_value])
+		formatString: #,0.00
+
+	/// Sum of total opportunity across the current filter context.
+	measure 'Total Total Opportunity' = SUM(fact_mpo_parts_labor[total_opportunity])
+		formatString: #,0.00
+
+	partition fact_mpo_parts_labor = entity
+		mode: directLake
+		source
+			entityName: fact_mpo_parts_labor
+			schemaName: operations
+			expressionSource: GoldSqlEndpoint

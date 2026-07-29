@@ -1,0 +1,74 @@
+/// FACT - fact_warranty_claim_part. Grain: One row per claim part line.
+table fact_warranty_claim_part
+	/// Primary/surrogate key. cp.Id
+	column claim_part_sf_id
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: claim_part_sf_id
+
+	/// cp.WOD_2__Claim__c
+	column claim_sf_id
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: claim_sf_id
+
+	/// COALESCE(cp.Non_OEM_Part_Number__c, cp.Name)
+	column material
+		dataType: string
+		summarizeBy: none
+		sourceColumn: material
+
+	/// cp.WOD_2__Type__c
+	column part_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: part_type
+
+	/// CASE WHEN cp.Is_Non_OEM_Part__c='true' THEN 1 ELSE 0 END
+	column is_non_oem
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: is_non_oem
+
+	/// cp.WOD_2__Quantity__c
+	column qty
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: qty
+
+	/// cp.WOD_2__Unit_Price__c
+	column unit_price
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: unit_price
+
+	/// cp.WOD_2__Total_Price__c
+	column total_price
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: total_price
+
+	/// Number of rows (records) in fact_warranty_claim_part.
+	measure 'fact_warranty_claim_part Row Count' = COUNTROWS(fact_warranty_claim_part)
+		formatString: #,0
+
+	/// Sum of qty across the current filter context.
+	measure 'Total Qty' = SUM(fact_warranty_claim_part[qty])
+		formatString: #,0.00
+
+	/// Sum of unit price across the current filter context.
+	measure 'Total Unit Price' = SUM(fact_warranty_claim_part[unit_price])
+		formatString: #,0.00
+
+	/// Sum of total price across the current filter context.
+	measure 'Total Total Price' = SUM(fact_warranty_claim_part[total_price])
+		formatString: #,0.00
+
+	partition fact_warranty_claim_part = entity
+		mode: directLake
+		source
+			entityName: fact_warranty_claim_part
+			schemaName: warranty_service
+			expressionSource: GoldSqlEndpoint

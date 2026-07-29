@@ -1,0 +1,90 @@
+/// Relates dim_date to fact_parts_invoice on invoice_date_key.
+relationship rel_fact_parts_invoice_invoice_date_key
+	fromColumn: fact_parts_invoice.invoice_date_key
+	toColumn: dim_date.date_key
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_dealer to fact_parts_invoice on dealer_code. (dim_dealer is SCD2 - assumes current-row semantics; resolve if versioned joins needed)
+relationship rel_fact_parts_invoice_dealer_code
+	fromColumn: fact_parts_invoice.dealer_code
+	toColumn: dim_dealer.dealer_code
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_material to fact_parts_invoice on material.
+relationship rel_fact_parts_invoice_material
+	fromColumn: fact_parts_invoice.material
+	toColumn: dim_material.material
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_plant to fact_parts_invoice on plant.
+relationship rel_fact_parts_invoice_plant
+	fromColumn: fact_parts_invoice.plant
+	toColumn: dim_plant.plant
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_date to fact_sales_orders on order_date_key.
+relationship rel_fact_sales_orders_order_date_key
+	fromColumn: fact_sales_orders.order_date_key
+	toColumn: dim_date.date_key
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_dealer to fact_sales_orders on dealer_code. (dim_dealer is SCD2 - assumes current-row semantics; resolve if versioned joins needed)
+relationship rel_fact_sales_orders_dealer_code
+	fromColumn: fact_sales_orders.dealer_code
+	toColumn: dim_dealer.dealer_code
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_material to fact_sales_orders on material.
+relationship rel_fact_sales_orders_material
+	fromColumn: fact_sales_orders.material
+	toColumn: dim_material.material
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_plant to fact_sales_orders on plant.
+relationship rel_fact_sales_orders_plant
+	fromColumn: fact_sales_orders.plant
+	toColumn: dim_plant.plant
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_date to fact_delivery on gi_date_key.
+relationship rel_fact_delivery_gi_date_key
+	fromColumn: fact_delivery.gi_date_key
+	toColumn: dim_date.date_key
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_dealer to fact_delivery on dealer_code. (dim_dealer is SCD2 - assumes current-row semantics; resolve if versioned joins needed)
+relationship rel_fact_delivery_dealer_code
+	fromColumn: fact_delivery.dealer_code
+	toColumn: dim_dealer.dealer_code
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_material to fact_delivery on material.
+relationship rel_fact_delivery_material
+	fromColumn: fact_delivery.material
+	toColumn: dim_material.material
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_plant to fact_delivery on plant.
+relationship rel_fact_delivery_plant
+	fromColumn: fact_delivery.plant
+	toColumn: dim_plant.plant
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_date to agg_monthly_parts_sales on month_key.
+relationship rel_agg_monthly_parts_sales_month_key
+	fromColumn: agg_monthly_parts_sales.month_key
+	toColumn: dim_date.date_key
+	crossFilteringBehavior: oneDirection
+	isActive: true

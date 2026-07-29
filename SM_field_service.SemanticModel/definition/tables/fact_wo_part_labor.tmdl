@@ -1,0 +1,107 @@
+/// FACT - fact_wo_part_labor. Grain: One row per work-order line.
+table fact_wo_part_labor
+	/// Primary/surrogate key. l.UniqueDocumentID
+	column unique_document_id
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: unique_document_id
+
+	/// l.SegmentID
+	column segment_id
+		dataType: string
+		summarizeBy: none
+		sourceColumn: segment_id
+
+	/// l.LineID
+	column line_id
+		dataType: string
+		summarizeBy: none
+		sourceColumn: line_id
+
+	/// TRIM(LEADING '0' FROM l.DealerCode)
+	column dealer_code
+		dataType: string
+		summarizeBy: none
+		sourceColumn: dealer_code
+
+	/// l.LineType
+	column line_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: line_type
+
+	/// l.ItemNumber
+	column item_number
+		dataType: string
+		summarizeBy: none
+		sourceColumn: item_number
+
+	/// l.PartVendor
+	column part_vendor
+		dataType: string
+		summarizeBy: none
+		sourceColumn: part_vendor
+
+	/// l.Quantity
+	column qty
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: qty
+
+	/// l.Price
+	column price
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: price
+
+	/// l.Discount
+	column discount
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: discount
+
+	/// l.LineTotal
+	column line_total
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: line_total
+
+	/// s.WarrantyProvider
+	column warranty_provider
+		dataType: string
+		summarizeBy: none
+		sourceColumn: warranty_provider
+
+	/// s.ComplaintType
+	column complaint_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: complaint_type
+
+	/// Number of rows (records) in fact_wo_part_labor.
+	measure 'fact_wo_part_labor Row Count' = COUNTROWS(fact_wo_part_labor)
+		formatString: #,0
+
+	/// Sum of qty across the current filter context.
+	measure 'Total Qty' = SUM(fact_wo_part_labor[qty])
+		formatString: #,0.00
+
+	/// Sum of price across the current filter context.
+	measure 'Total Price' = SUM(fact_wo_part_labor[price])
+		formatString: #,0.00
+
+	/// Sum of discount across the current filter context.
+	measure 'Total Discount' = SUM(fact_wo_part_labor[discount])
+		formatString: #,0.00
+
+	/// Sum of line total across the current filter context.
+	measure 'Total Line Total' = SUM(fact_wo_part_labor[line_total])
+		formatString: #,0.00
+
+	partition fact_wo_part_labor = entity
+		mode: directLake
+		source
+			entityName: fact_wo_part_labor
+			schemaName: field_service
+			expressionSource: GoldSqlEndpoint

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "SM_order_fulfillment"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "9a8a19da-0f9d-49f7-a93f-5f05acfdad5f"
+  }
+}

@@ -1,0 +1,27 @@
+/// Relates dim_dealer to fact_service_campaign_member on dealer_code. (dim_dealer is SCD2 - assumes current-row semantics; resolve if versioned joins needed)
+relationship rel_fact_service_campaign_member_dealer_code
+	fromColumn: fact_service_campaign_member.dealer_code
+	toColumn: dim_dealer.dealer_code
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_dealer to fact_work_order on dealer_code. (dim_dealer is SCD2 - assumes current-row semantics; resolve if versioned joins needed)
+relationship rel_fact_work_order_dealer_code
+	fromColumn: fact_work_order.dealer_code
+	toColumn: dim_dealer.dealer_code
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_date to fact_work_order on billing_date_key.
+relationship rel_fact_work_order_billing_date_key
+	fromColumn: fact_work_order.billing_date_key
+	toColumn: dim_date.date_key
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_dealer to fact_wo_part_labor on dealer_code. (dim_dealer is SCD2 - assumes current-row semantics; resolve if versioned joins needed)
+relationship rel_fact_wo_part_labor_dealer_code
+	fromColumn: fact_wo_part_labor.dealer_code
+	toColumn: dim_dealer.dealer_code
+	crossFilteringBehavior: oneDirection
+	isActive: true

@@ -1,0 +1,133 @@
+/// FACT - fact_backorder. Grain: One row per backordered sales order line.
+table fact_backorder
+	/// Primary/surrogate key. b.SALES_ORDER
+	column sales_order
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: sales_order
+
+	/// b.SO_ITEM
+	column so_item
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: so_item
+
+	/// Foreign key to dimension. CAST(CONVERT(VARCHAR(8), b.ORDER_DATE, 112) AS INT)
+	column order_date_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: order_date_key
+
+	/// Foreign key to dimension. CAST(CONVERT(VARCHAR(8), b.CLOSED_DATE, 112) AS INT)
+	column closed_date_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: closed_date_key
+
+	/// b.DEALER
+	column dealer_code
+		dataType: string
+		summarizeBy: none
+		sourceColumn: dealer_code
+
+	/// b.MATERIAL
+	column material
+		dataType: string
+		summarizeBy: none
+		sourceColumn: material
+
+	/// b.SHIPPING_PLANT
+	column shipping_plant
+		dataType: string
+		summarizeBy: none
+		sourceColumn: shipping_plant
+
+	/// b.ORDER_TYPE
+	column order_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: order_type
+
+	/// b.VENDOR
+	column vendor_code
+		dataType: string
+		summarizeBy: none
+		sourceColumn: vendor_code
+
+	/// b.ORDER_QTY
+	column order_qty
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: order_qty
+
+	/// b.CONFIRMED_QTY
+	column confirmed_qty
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: confirmed_qty
+
+	/// b.DELIVERED_QTY
+	column delivered_qty
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: delivered_qty
+
+	/// b.ORDER_QTY - b.DELIVERED_QTY
+	column open_qty
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: open_qty
+
+	/// DATEDIFF(DAY, b.ORDER_DATE, COALESCE(b.CLOSED_DATE, CAST(GETDATE() AS DATE)))
+	column days_open
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: days_open
+
+	/// b.BACKORDER_INDICATOR
+	column backorder_flag
+		dataType: string
+		summarizeBy: none
+		sourceColumn: backorder_flag
+
+	/// -- 'X' when open & not rejected b.REJECTED_LINE
+	column rejected_flag
+		dataType: string
+		summarizeBy: none
+		sourceColumn: rejected_flag
+
+	/// b.FILL_STATUS
+	column fill_status
+		dataType: string
+		summarizeBy: none
+		sourceColumn: fill_status
+
+	/// Number of rows (records) in fact_backorder.
+	measure 'fact_backorder Row Count' = COUNTROWS(fact_backorder)
+		formatString: #,0
+
+	/// Sum of order qty across the current filter context.
+	measure 'Total Order Qty' = SUM(fact_backorder[order_qty])
+		formatString: #,0.00
+
+	/// Sum of confirmed qty across the current filter context.
+	measure 'Total Confirmed Qty' = SUM(fact_backorder[confirmed_qty])
+		formatString: #,0.00
+
+	/// Sum of delivered qty across the current filter context.
+	measure 'Total Delivered Qty' = SUM(fact_backorder[delivered_qty])
+		formatString: #,0.00
+
+	/// Sum of open qty across the current filter context.
+	measure 'Total Open Qty' = SUM(fact_backorder[open_qty])
+		formatString: #,0.00
+
+	partition fact_backorder = entity
+		mode: directLake
+		source
+			entityName: fact_backorder
+			schemaName: order_fulfillment
+			expressionSource: GoldSqlEndpoint

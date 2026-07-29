@@ -1,0 +1,14 @@
+/// Direct Lake semantic model for D8 Ad-hoc & Operational Analysis. Facts and conformed dimensions from the Gold warehouse; ratio/derived KPIs implemented as measures.
+model SM_operations
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+
+ref table fact_machine_usage_daily
+ref table fact_mpo_parts_labor
+ref table fact_expense_actual_plan
+ref table dim_machine_useful_life
+ref table dim_cost_center
+ref table dim_date
+ref table dim_dealer
+ref table dim_machine
+ref table dim_material

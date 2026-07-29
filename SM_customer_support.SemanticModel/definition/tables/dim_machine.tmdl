@@ -1,0 +1,123 @@
+/// DIM - dim_machine (conformed). Grain: One row per serialized machine (PIN/serial + model).
+table dim_machine
+	/// Primary/surrogate key. ROW_NUMBER() OVER (ORDER BY inv.WOD_2__Serial_Number__c, inv.Name)
+	column machine_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: machine_key
+
+	/// inv.WOD_2__Serial_Number__c
+	column serial_number
+		dataType: string
+		summarizeBy: none
+		sourceColumn: serial_number
+
+	/// inv.Name
+	column model
+		dataType: string
+		summarizeBy: none
+		sourceColumn: model
+
+	/// mul.Planning_Model
+	column base_model
+		dataType: string
+		summarizeBy: none
+		sourceColumn: base_model
+
+	/// mul.Product_Type
+	column product_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: product_type
+
+	/// mul.Series
+	column series
+		dataType: string
+		summarizeBy: none
+		sourceColumn: series
+
+	/// mul.HP_Group
+	column hp_group
+		dataType: string
+		summarizeBy: none
+		sourceColumn: hp_group
+
+	/// TRIM(LEADING '0' FROM inv.Billing_Dealer__c)
+	column dealer_code
+		dataType: string
+		summarizeBy: none
+		sourceColumn: dealer_code
+
+	/// inv.WOD_2__Customer__c
+	column customer_id
+		dataType: string
+		summarizeBy: none
+		sourceColumn: customer_id
+
+	/// inv.WOD_2__Install_Date__c
+	column install_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: install_date
+
+	/// inv.WOD_2__Shipment_Date__c
+	column shipment_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: shipment_date
+
+	/// inv.WOD_2__Manufacturing_Date__c
+	column manufacturing_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: manufacturing_date
+
+	/// inv.WOD_2__Warranty_Start_Date__c
+	column warranty_start_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: warranty_start_date
+
+	/// inv.WOD_2__Warranty_End_Date__c
+	column warranty_end_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: warranty_end_date
+
+	/// inv.WOD_2__Units_Usage__c
+	column units_usage
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: units_usage
+
+	/// CASE WHEN inv.WOD_2__Pre_Owned__c = 'true' THEN 1 ELSE 0 END
+	column pre_owned_flag
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: pre_owned_flag
+
+	/// CASE WHEN inv.WOD_2__Scrapped__c = 'true' THEN 1 ELSE 0 END
+	column scrapped_flag
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: scrapped_flag
+
+	/// mul.Useful_Life_Hours
+	column useful_life_hours
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: useful_life_hours
+
+	/// mul.Useful_Life_Years
+	column useful_life_years
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: useful_life_years
+
+	partition dim_machine = entity
+		mode: directLake
+		source
+			entityName: dim_machine
+			schemaName: conformed
+			expressionSource: GoldSqlEndpoint

@@ -1,0 +1,33 @@
+/// DIM - dim_agent / dim_survey_type / dim_issue_category. Grain: One row per agent / survey type / issue category.
+table dim_survey_type
+	/// Primary/surrogate key.
+	column survey_type
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: survey_type
+
+	/// Survey Name attribute.
+	column survey_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: survey_name
+
+	/// Nps Question attribute.
+	column nps_question
+		dataType: string
+		summarizeBy: none
+		sourceColumn: nps_question
+
+	/// Score Question attribute.
+	column score_question
+		dataType: string
+		summarizeBy: none
+		sourceColumn: score_question
+
+	partition dim_survey_type = entity
+		mode: directLake
+		source
+			entityName: dim_survey_type
+			schemaName: customer_support
+			expressionSource: GoldSqlEndpoint

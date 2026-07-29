@@ -1,0 +1,13 @@
+/// Direct Lake semantic model for D2 PO & Procurement Analytics. Facts and conformed dimensions from the Gold warehouse; ratio/derived KPIs implemented as measures.
+model SM_procurement
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+
+ref table dim_vendor
+ref table dim_buyer
+ref table fact_purchase_order_item
+ref table fact_po_invoice_match
+ref table plp_vendor_pir
+ref table dim_date
+ref table dim_material
+ref table dim_plant

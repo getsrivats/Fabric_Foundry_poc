@@ -1,0 +1,4 @@
+/// Direct Lake connection to the Gold warehouse SQL analytics endpoint. Replace <GOLD_SQL_ENDPOINT> with the workspace value at import.
+expression GoldSqlEndpoint =
+		let Source = Sql.Database("dtbdpjvr5bhejagdtnkfeye7ie-b5qxnlzztexujespnfztvz2obi.datawarehouse.fabric.microsoft.com", "Gold") in Source
+	lineageTag: gold-sql-endpoint

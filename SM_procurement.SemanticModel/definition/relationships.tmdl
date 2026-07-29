@@ -1,0 +1,27 @@
+/// Relates dim_date to fact_purchase_order_item on doc_date_key.
+relationship rel_fact_purchase_order_item_doc_date_key
+	fromColumn: fact_purchase_order_item.doc_date_key
+	toColumn: dim_date.date_key
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_vendor to fact_purchase_order_item on vendor_code.
+relationship rel_fact_purchase_order_item_vendor_code
+	fromColumn: fact_purchase_order_item.vendor_code
+	toColumn: dim_vendor.vendor_code
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_material to fact_purchase_order_item on material.
+relationship rel_fact_purchase_order_item_material
+	fromColumn: fact_purchase_order_item.material
+	toColumn: dim_material.material
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_plant to fact_purchase_order_item on plant.
+relationship rel_fact_purchase_order_item_plant
+	fromColumn: fact_purchase_order_item.plant
+	toColumn: dim_plant.plant
+	crossFilteringBehavior: oneDirection
+	isActive: true

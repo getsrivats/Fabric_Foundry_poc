@@ -1,0 +1,74 @@
+/// FACT - fact_survey_response. Grain: One row per survey response.
+table fact_survey_response
+	/// Primary/surrogate key. ResponseId
+	column response_id
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: response_id
+
+	/// 'CSAT'
+	column survey_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: survey_type
+
+	/// Foreign key to dimension. CAST(CONVERT(VARCHAR(8), RecordedDate,112) AS INT)
+	column recorded_date_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: recorded_date_key
+
+	/// CASE WHEN Finished='1' THEN 1 ELSE 0 END
+	column finished_flag
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: finished_flag
+
+	/// Q2_NPS_GROUP
+	column nps_group
+		dataType: string
+		summarizeBy: none
+		sourceColumn: nps_group
+
+	/// TRY_CAST(Q2 AS DECIMAL(9,2))
+	column primary_score
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: primary_score
+
+	/// [Case Number]
+	column case_number
+		dataType: string
+		summarizeBy: none
+		sourceColumn: case_number
+
+	/// [Account Number]
+	column account_number
+		dataType: string
+		summarizeBy: none
+		sourceColumn: account_number
+
+	/// [Model Number]
+	column model_number
+		dataType: string
+		summarizeBy: none
+		sourceColumn: model_number
+
+	/// [Case Record Type]
+	column case_record_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: case_record_type
+
+	/// Number of rows (records) in fact_survey_response.
+	measure 'fact_survey_response Row Count' = COUNTROWS(fact_survey_response)
+		formatString: #,0
+
+	partition fact_survey_response = entity
+		mode: directLake
+		source
+			entityName: fact_survey_response
+			schemaName: customer_support
+			expressionSource: GoldSqlEndpoint

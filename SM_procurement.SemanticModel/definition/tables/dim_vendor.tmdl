@@ -1,0 +1,75 @@
+/// DIM - dim_vendor. Grain: One row per vendor.
+table dim_vendor
+	/// Primary/surrogate key. ROW_NUMBER() OVER (ORDER BY v.LIFNR)
+	column vendor_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: vendor_key
+
+	/// v.LIFNR
+	column vendor_code
+		dataType: string
+		summarizeBy: none
+		sourceColumn: vendor_code
+
+	/// v.NAME1
+	column vendor_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: vendor_name
+
+	/// v.LAND1
+	column country
+		dataType: string
+		summarizeBy: none
+		sourceColumn: country
+
+	/// v.REGIO
+	column region
+		dataType: string
+		summarizeBy: none
+		sourceColumn: region
+
+	/// v.ORT01
+	column city
+		dataType: string
+		summarizeBy: none
+		sourceColumn: city
+
+	/// f.mo_factor
+	column mo_factor
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: mo_factor
+
+	/// f.comm_factor
+	column comm_factor
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: comm_factor
+
+	/// f.mark_factor
+	column mark_factor
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: mark_factor
+
+	/// f.exchg_factor
+	column exchg_factor
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: exchg_factor
+
+	/// CASE WHEN f.exchg_factor <> 0 THEN (f.mo_factor * f.comm_factor * f.mark_factor) / f.exchg_factor END
+	column pir_multiplier
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: pir_multiplier
+
+	partition dim_vendor = entity
+		mode: directLake
+		source
+			entityName: dim_vendor
+			schemaName: procurement
+			expressionSource: GoldSqlEndpoint

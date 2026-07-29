@@ -1,0 +1,64 @@
+/// FACT - fact_warranty_other_cost. Grain: One row per other-cost line.
+table fact_warranty_other_cost
+	/// Primary/surrogate key. oc.Id
+	column other_cost_sf_id
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: other_cost_sf_id
+
+	/// oc.WOD_2__Claim__c
+	column claim_sf_id
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: claim_sf_id
+
+	/// oc.WOD_2__Cost_Category_Type__c
+	column cost_category
+		dataType: string
+		summarizeBy: none
+		sourceColumn: cost_category
+
+	/// oc.WOD_2__Units_Usage__c
+	column units_usage
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: units_usage
+
+	/// oc.WOD_2__Rate_Per_Unit__c
+	column rate_per_unit
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: rate_per_unit
+
+	/// oc.WOD_2__Total_Cost__c
+	column total_cost
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: total_cost
+
+	/// NULL
+	column over_mileage_fee
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: over_mileage_fee
+
+	/// Number of rows (records) in fact_warranty_other_cost.
+	measure 'fact_warranty_other_cost Row Count' = COUNTROWS(fact_warranty_other_cost)
+		formatString: #,0
+
+	/// Sum of rate per unit across the current filter context.
+	measure 'Total Rate Per Unit' = SUM(fact_warranty_other_cost[rate_per_unit])
+		formatString: #,0.00
+
+	/// Sum of total cost across the current filter context.
+	measure 'Total Total Cost' = SUM(fact_warranty_other_cost[total_cost])
+		formatString: #,0.00
+
+	partition fact_warranty_other_cost = entity
+		mode: directLake
+		source
+			entityName: fact_warranty_other_cost
+			schemaName: warranty_service
+			expressionSource: GoldSqlEndpoint

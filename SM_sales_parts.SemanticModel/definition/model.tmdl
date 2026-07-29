@@ -1,0 +1,15 @@
+/// Direct Lake semantic model for D1 Sales & Parts Analytics. Facts and conformed dimensions from the Gold warehouse; ratio/derived KPIs implemented as measures.
+model SM_sales_parts
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+
+ref table fact_parts_invoice
+ref table fact_sales_orders
+ref table fact_delivery
+ref table agg_monthly_parts_sales
+ref table plp_list_price_msrp
+ref table plp_export_price
+ref table dim_date
+ref table dim_dealer
+ref table dim_material
+ref table dim_plant

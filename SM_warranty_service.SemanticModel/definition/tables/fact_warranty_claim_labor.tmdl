@@ -1,0 +1,88 @@
+/// FACT - fact_warranty_claim_labor. Grain: One row per claim service line.
+table fact_warranty_claim_labor
+	/// Primary/surrogate key. l.Id
+	column csi_sf_id
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: csi_sf_id
+
+	/// l.WOD_2__Claim__c
+	column claim_sf_id
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: claim_sf_id
+
+	/// l.WOD_2__Service_Job_Code__c
+	column job_code
+		dataType: string
+		summarizeBy: none
+		sourceColumn: job_code
+
+	/// l.Job_Code_Description__c
+	column job_code_desc
+		dataType: string
+		summarizeBy: none
+		sourceColumn: job_code_desc
+
+	/// l.WOD_2__Standard_Labor_Hour__c
+	column standard_hours
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: standard_hours
+
+	/// l.WOD_2__Additional_Labor_Hour__c
+	column additional_hours
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: additional_hours
+
+	/// l.WOD_2__Total_Labor_Hours__c
+	column total_hours
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: total_hours
+
+	/// l.WOD_2__Labor_Rate__c
+	column labor_rate
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: labor_rate
+
+	/// l.WOD_2__Total_Labor_Cost__c
+	column total_labor_cost
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: total_labor_cost
+
+	/// Number of rows (records) in fact_warranty_claim_labor.
+	measure 'fact_warranty_claim_labor Row Count' = COUNTROWS(fact_warranty_claim_labor)
+		formatString: #,0
+
+	/// Sum of standard hours across the current filter context.
+	measure 'Total Standard Hours' = SUM(fact_warranty_claim_labor[standard_hours])
+		formatString: #,0.00
+
+	/// Sum of additional hours across the current filter context.
+	measure 'Total Additional Hours' = SUM(fact_warranty_claim_labor[additional_hours])
+		formatString: #,0.00
+
+	/// Sum of total hours across the current filter context.
+	measure 'Total Total Hours' = SUM(fact_warranty_claim_labor[total_hours])
+		formatString: #,0.00
+
+	/// Sum of labor rate across the current filter context.
+	measure 'Total Labor Rate' = SUM(fact_warranty_claim_labor[labor_rate])
+		formatString: #,0.00
+
+	/// Sum of total labor cost across the current filter context.
+	measure 'Total Total Labor Cost' = SUM(fact_warranty_claim_labor[total_labor_cost])
+		formatString: #,0.00
+
+	partition fact_warranty_claim_labor = entity
+		mode: directLake
+		source
+			entityName: fact_warranty_claim_labor
+			schemaName: warranty_service
+			expressionSource: GoldSqlEndpoint

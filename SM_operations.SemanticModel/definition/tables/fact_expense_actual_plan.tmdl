@@ -1,0 +1,47 @@
+/// FACT - fact_expense_actual_plan. Grain: One row per month x cost center x version (ACTUAL/PLAN).
+table fact_expense_actual_plan
+	/// Primary/surrogate key. CAST(LEFT(a.FISCYEARPER,4) + SUBSTRING(a.FISCYEARPER,6,2) AS INT)
+	column period_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: period_key
+
+	/// a.RCNTR
+	column cost_center
+		dataType: string
+		summarizeBy: none
+		sourceColumn: cost_center
+
+	/// a.RACCT
+	column gl_account
+		dataType: string
+		summarizeBy: none
+		sourceColumn: gl_account
+
+	/// 'ACTUAL'
+	column version
+		dataType: string
+		summarizeBy: none
+		sourceColumn: version
+
+	/// SUM(a.WSL)
+	column amount
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: amount
+
+	/// Number of rows (records) in fact_expense_actual_plan.
+	measure 'fact_expense_actual_plan Row Count' = COUNTROWS(fact_expense_actual_plan)
+		formatString: #,0
+
+	/// Sum of amount across the current filter context.
+	measure 'Total Amount' = SUM(fact_expense_actual_plan[amount])
+		formatString: #,0.00
+
+	partition fact_expense_actual_plan = entity
+		mode: directLake
+		source
+			entityName: fact_expense_actual_plan
+			schemaName: operations
+			expressionSource: GoldSqlEndpoint

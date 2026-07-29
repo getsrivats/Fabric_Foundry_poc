@@ -1,0 +1,27 @@
+/// Relates dim_learner to fact_training_enrollment on user_key.
+relationship rel_fact_training_enrollment_user_key
+	fromColumn: fact_training_enrollment.user_key
+	toColumn: dim_learner.user_key
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_course to fact_training_enrollment on course_key.
+relationship rel_fact_training_enrollment_course_key
+	fromColumn: fact_training_enrollment.course_key
+	toColumn: dim_course.course_key
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_curriculum to fact_training_enrollment on curriculum_key.
+relationship rel_fact_training_enrollment_curriculum_key
+	fromColumn: fact_training_enrollment.curriculum_key
+	toColumn: dim_curriculum.curriculum_key
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_date to fact_training_enrollment on completion_date_key.
+relationship rel_fact_training_enrollment_completion_date_key
+	fromColumn: fact_training_enrollment.completion_date_key
+	toColumn: dim_date.date_key
+	crossFilteringBehavior: oneDirection
+	isActive: true

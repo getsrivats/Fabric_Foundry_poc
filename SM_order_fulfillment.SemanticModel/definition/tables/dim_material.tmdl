@@ -1,0 +1,147 @@
+/// DIM - dim_material. Grain: One row per material (SCD1).
+table dim_material
+	/// Primary/surrogate key.
+	column material_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: material_key
+
+	/// Material attribute.
+	column material
+		dataType: string
+		summarizeBy: none
+		sourceColumn: material
+
+	/// Old Material attribute.
+	column old_material
+		dataType: string
+		summarizeBy: none
+		sourceColumn: old_material
+
+	/// Material Desc attribute.
+	column material_desc
+		dataType: string
+		summarizeBy: none
+		sourceColumn: material_desc
+
+	/// Material Group attribute.
+	column material_group
+		dataType: string
+		summarizeBy: none
+		sourceColumn: material_group
+
+	/// Material Group Desc attribute.
+	column material_group_desc
+		dataType: string
+		summarizeBy: none
+		sourceColumn: material_group_desc
+
+	/// Division attribute.
+	column division
+		dataType: string
+		summarizeBy: none
+		sourceColumn: division
+
+	/// Material Type attribute.
+	column material_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: material_type
+
+	/// Ph1 attribute.
+	column ph1
+		dataType: string
+		summarizeBy: none
+		sourceColumn: ph1
+
+	/// Ph2 attribute.
+	column ph2
+		dataType: string
+		summarizeBy: none
+		sourceColumn: ph2
+
+	/// Ph3 attribute.
+	column ph3
+		dataType: string
+		summarizeBy: none
+		sourceColumn: ph3
+
+	/// Sales Model attribute.
+	column sales_model
+		dataType: string
+		summarizeBy: none
+		sourceColumn: sales_model
+
+	/// Country Of Origin attribute.
+	column country_of_origin
+		dataType: string
+		summarizeBy: none
+		sourceColumn: country_of_origin
+
+	/// Harmonic Code attribute.
+	column harmonic_code
+		dataType: string
+		summarizeBy: none
+		sourceColumn: harmonic_code
+
+	/// Sales Status attribute.
+	column sales_status
+		dataType: string
+		summarizeBy: none
+		sourceColumn: sales_status
+
+	/// Purch Status attribute.
+	column purch_status
+		dataType: string
+		summarizeBy: none
+		sourceColumn: purch_status
+
+	/// Abc Indicator attribute.
+	column abc_indicator
+		dataType: string
+		summarizeBy: none
+		sourceColumn: abc_indicator
+
+	/// Is Returnable attribute.
+	column is_returnable
+		dataType: string
+		summarizeBy: none
+		sourceColumn: is_returnable
+
+	/// Supersession Part attribute.
+	column supersession_part
+		dataType: string
+		summarizeBy: none
+		sourceColumn: supersession_part
+
+	/// Latest Part attribute.
+	column latest_part
+		dataType: string
+		summarizeBy: none
+		sourceColumn: latest_part
+
+	/// Current List Price attribute.
+	column current_list_price
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: current_list_price
+
+	/// Current Export Price attribute.
+	column current_export_price
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: current_export_price
+
+	/// Created On attribute.
+	column created_on
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: created_on
+
+	partition dim_material = entity
+		mode: directLake
+		source
+			entityName: dim_material
+			schemaName: conformed
+			expressionSource: GoldSqlEndpoint

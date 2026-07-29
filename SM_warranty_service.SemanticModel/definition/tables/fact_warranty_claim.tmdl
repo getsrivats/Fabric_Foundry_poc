@@ -1,0 +1,132 @@
+/// FACT - fact_warranty_claim. Grain: One row per claim.
+table fact_warranty_claim
+	/// Primary/surrogate key. c.Id
+	column claim_sf_id
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: claim_sf_id
+
+	/// c.WOD_2__Claim_Auto_Number__c
+	column claim_number
+		dataType: string
+		summarizeBy: none
+		sourceColumn: claim_number
+
+	/// c.WOD_2__Claim_Record_Type__c
+	column claim_record_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: claim_record_type
+
+	/// c.WOD_2__Claim_Type__c
+	column claim_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: claim_type
+
+	/// c.WOD_2__Claim_Status__c
+	column claim_status
+		dataType: string
+		summarizeBy: none
+		sourceColumn: claim_status
+
+	/// TRIM(LEADING '0' FROM a.Dealer_Code__c)
+	column dealer_code
+		dataType: string
+		summarizeBy: none
+		sourceColumn: dealer_code
+
+	/// inv.WOD_2__Serial_Number__c
+	column machine_serial
+		dataType: string
+		summarizeBy: none
+		sourceColumn: machine_serial
+
+	/// c.WOD_2__Causal_Part_Number__c
+	column causal_part
+		dataType: string
+		summarizeBy: none
+		sourceColumn: causal_part
+
+	/// c.WOD_2__Fault_Code__c
+	column fault_code
+		dataType: string
+		summarizeBy: none
+		sourceColumn: fault_code
+
+	/// c.WOD_2__Date_Of_Failure__c
+	column date_of_failure
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: date_of_failure
+
+	/// c.WOD_2__Date_Of_Repair__c
+	column date_of_repair
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: date_of_repair
+
+	/// c.WOD_2__Date_Of_Purchase__c
+	column date_of_purchase
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: date_of_purchase
+
+	/// Foreign key to dimension. CAST(CONVERT(VARCHAR(8), c.WOD_2__Claim_Submission_Time__c,112) AS INT)
+	column submit_date_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: submit_date_key
+
+	/// p.parts_amt
+	column parts_amount
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: parts_amount
+
+	/// l.labor_amt
+	column labor_amount
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: labor_amount
+
+	/// o.other_amt
+	column other_cost_amount
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: other_cost_amount
+
+	/// COALESCE(p.parts_amt,0)+COALESCE(l.labor_amt,0)+COALESCE(o.other_amt,0)
+	column total_claim_amount
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: total_claim_amount
+
+	/// Number of rows (records) in fact_warranty_claim.
+	measure 'fact_warranty_claim Row Count' = COUNTROWS(fact_warranty_claim)
+		formatString: #,0
+
+	/// Sum of parts amount across the current filter context.
+	measure 'Total Parts Amount' = SUM(fact_warranty_claim[parts_amount])
+		formatString: #,0.00
+
+	/// Sum of labor amount across the current filter context.
+	measure 'Total Labor Amount' = SUM(fact_warranty_claim[labor_amount])
+		formatString: #,0.00
+
+	/// Sum of other cost amount across the current filter context.
+	measure 'Total Other Cost Amount' = SUM(fact_warranty_claim[other_cost_amount])
+		formatString: #,0.00
+
+	/// Sum of total claim amount across the current filter context.
+	measure 'Total Total Claim Amount' = SUM(fact_warranty_claim[total_claim_amount])
+		formatString: #,0.00
+
+	partition fact_warranty_claim = entity
+		mode: directLake
+		source
+			entityName: fact_warranty_claim
+			schemaName: warranty_service
+			expressionSource: GoldSqlEndpoint

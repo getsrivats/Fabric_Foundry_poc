@@ -1,0 +1,86 @@
+/// FACT - fact_call_interaction. Grain: One row per interaction.
+table fact_call_interaction
+	/// Primary/surrogate key. d.[Interaction ID]
+	column interaction_id
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: interaction_id
+
+	/// Foreign key to dimension. CAST(CONVERT(VARCHAR(8), d.[Creation Time],112) AS INT)
+	column date_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: date_key
+
+	/// d.[Agent Name]
+	column agent_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: agent_name
+
+	/// d.[Channel Name]
+	column channel_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: channel_name
+
+	/// d.[Queue Name]
+	column queue_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: queue_name
+
+	/// d.[Media Type]
+	column media_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: media_type
+
+	/// d.Direction
+	column direction
+		dataType: string
+		summarizeBy: none
+		sourceColumn: direction
+
+	/// d.[Case Number]
+	column case_number
+		dataType: string
+		summarizeBy: none
+		sourceColumn: case_number
+
+	/// d.[Interaction Duration]
+	column interaction_secs
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: interaction_secs
+
+	/// d.[IVR Treatment Duration]
+	column ivr_secs
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: ivr_secs
+
+	/// d.[Busy Duration]
+	column busy_secs
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: busy_secs
+
+	/// d.Outcome
+	column outcome
+		dataType: string
+		summarizeBy: none
+		sourceColumn: outcome
+
+	/// Number of rows (records) in fact_call_interaction.
+	measure 'fact_call_interaction Row Count' = COUNTROWS(fact_call_interaction)
+		formatString: #,0
+
+	partition fact_call_interaction = entity
+		mode: directLake
+		source
+			entityName: fact_call_interaction
+			schemaName: customer_support
+			expressionSource: GoldSqlEndpoint

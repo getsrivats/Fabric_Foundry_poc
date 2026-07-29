@@ -1,0 +1,114 @@
+/// FACT - fact_osd_claim. Grain: One row per OSD case.
+table fact_osd_claim
+	/// Primary/surrogate key. o.Id
+	column case_sf_id
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: case_sf_id
+
+	/// o.CaseNumber
+	column case_number
+		dataType: string
+		summarizeBy: none
+		sourceColumn: case_number
+
+	/// o.Account_Number__c
+	column dealer_account
+		dataType: string
+		summarizeBy: none
+		sourceColumn: dealer_account
+
+	/// o.Parts_Case_Reason__c
+	column case_reason
+		dataType: string
+		summarizeBy: none
+		sourceColumn: case_reason
+
+	/// o.Secondary_Category__c
+	column secondary_cat
+		dataType: string
+		summarizeBy: none
+		sourceColumn: secondary_cat
+
+	/// o.Parts_or_Wholegoods__c
+	column parts_or_wg
+		dataType: string
+		summarizeBy: none
+		sourceColumn: parts_or_wg
+
+	/// o.Sales_Order_Number__c
+	column sales_order
+		dataType: string
+		summarizeBy: none
+		sourceColumn: sales_order
+
+	/// o.Invoice_Number__c
+	column invoice_number
+		dataType: string
+		summarizeBy: none
+		sourceColumn: invoice_number
+
+	/// o.Shipped_From__c
+	column shipped_from
+		dataType: string
+		summarizeBy: none
+		sourceColumn: shipped_from
+
+	/// o.Shipped_Date__c
+	column shipped_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: shipped_date
+
+	/// o.Carrier__c
+	column carrier
+		dataType: string
+		summarizeBy: none
+		sourceColumn: carrier
+
+	/// Foreign key to dimension. CAST(CONVERT(VARCHAR(8), o.Date_Opened__c,112) AS INT)
+	column open_date_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: open_date_key
+
+	/// o.ClosedDate
+	column closed_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: closed_date
+
+	/// o.Claim_Value__c
+	column claim_value
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: claim_value
+
+	/// o.Claim_Status__c
+	column claim_status
+		dataType: string
+		summarizeBy: none
+		sourceColumn: claim_status
+
+	/// o.[Credit or Carrier Claim]
+	column credit_or_carrier
+		dataType: string
+		summarizeBy: none
+		sourceColumn: credit_or_carrier
+
+	/// Number of rows (records) in fact_osd_claim.
+	measure 'fact_osd_claim Row Count' = COUNTROWS(fact_osd_claim)
+		formatString: #,0
+
+	/// Sum of claim value across the current filter context.
+	measure 'Total Claim Value' = SUM(fact_osd_claim[claim_value])
+		formatString: #,0.00
+
+	partition fact_osd_claim = entity
+		mode: directLake
+		source
+			entityName: fact_osd_claim
+			schemaName: customer_support
+			expressionSource: GoldSqlEndpoint

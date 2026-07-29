@@ -1,0 +1,16 @@
+/// Direct Lake semantic model for D3 Order Fulfillment & Supply Chain. Facts and conformed dimensions from the Gold warehouse; ratio/derived KPIs implemented as measures.
+model SM_order_fulfillment
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+
+ref table fact_fill_rate
+ref table fact_backorder
+ref table fact_ots_shipment
+ref table fact_storage_bin_snapshot
+ref table fact_cycle_count
+ref table dim_storage_bin
+ref table dim_route_sequence
+ref table dim_date
+ref table dim_dealer
+ref table dim_material
+ref table dim_plant

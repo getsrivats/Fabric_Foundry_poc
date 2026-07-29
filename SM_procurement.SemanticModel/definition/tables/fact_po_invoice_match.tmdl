@@ -1,0 +1,81 @@
+/// FACT - fact_po_invoice_match. Grain: One row per PO line.
+table fact_po_invoice_match
+	/// Primary/surrogate key. e.EBELN
+	column po_number
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: po_number
+
+	/// e.EBELP
+	column po_item
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: po_item
+
+	/// SUM(CASE WHEN e.BEWTP='E' THEN CASE WHEN e.SHKZG='H' THEN -e.MENGE ELSE e.MENGE END END)
+	column gr_qty
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: gr_qty
+
+	/// SUM(CASE WHEN e.BEWTP='E' THEN CASE WHEN e.SHKZG='H' THEN -e.DMBTR ELSE e.DMBTR END END)
+	column gr_value
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: gr_value
+
+	/// SUM(CASE WHEN e.BEWTP='Q' THEN CASE WHEN e.SHKZG='H' THEN -e.MENGE ELSE e.MENGE END END)
+	column inv_qty
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: inv_qty
+
+	/// SUM(CASE WHEN e.BEWTP='Q' THEN CASE WHEN e.SHKZG='H' THEN -e.DMBTR ELSE e.DMBTR END END)
+	column inv_value
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: inv_value
+
+	/// SUM(CASE WHEN e.BEWTP='E' THEN CASE WHEN e.SHKZG='H' THEN -e.MENGE ELSE e.MENGE END ELSE 0 END) - SUM(CASE WHEN e.BEW...
+	column qty_variance
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: qty_variance
+
+	/// CASE WHEN ABS(SUM(CASE WHEN e.BEWTP='E' THEN e.MENGE ELSE 0 END) - SUM(CASE WHEN e.BEWTP='Q' THEN e.MENGE ELSE 0 END)...
+	column match_status
+		dataType: string
+		summarizeBy: none
+		sourceColumn: match_status
+
+	/// Number of rows (records) in fact_po_invoice_match.
+	measure 'fact_po_invoice_match Row Count' = COUNTROWS(fact_po_invoice_match)
+		formatString: #,0
+
+	/// Sum of gr qty across the current filter context.
+	measure 'Total Gr Qty' = SUM(fact_po_invoice_match[gr_qty])
+		formatString: #,0.00
+
+	/// Sum of gr value across the current filter context.
+	measure 'Total Gr Value' = SUM(fact_po_invoice_match[gr_value])
+		formatString: #,0.00
+
+	/// Sum of inv qty across the current filter context.
+	measure 'Total Inv Qty' = SUM(fact_po_invoice_match[inv_qty])
+		formatString: #,0.00
+
+	/// Sum of inv value across the current filter context.
+	measure 'Total Inv Value' = SUM(fact_po_invoice_match[inv_value])
+		formatString: #,0.00
+
+	/// Sum of qty variance across the current filter context.
+	measure 'Total Qty Variance' = SUM(fact_po_invoice_match[qty_variance])
+		formatString: #,0.00
+
+	partition fact_po_invoice_match = entity
+		mode: directLake
+		source
+			entityName: fact_po_invoice_match
+			schemaName: procurement
+			expressionSource: GoldSqlEndpoint

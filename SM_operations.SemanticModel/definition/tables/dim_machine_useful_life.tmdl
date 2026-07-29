@@ -1,0 +1,63 @@
+/// DIM - dim_machine_useful_life / dim_cost_center. Grain: One row per material (useful life) / per cost center.
+table dim_machine_useful_life
+	/// Primary/surrogate key. Material
+	column material
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: material
+
+	/// Product_Type
+	column product_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: product_type
+
+	/// Series
+	column series
+		dataType: string
+		summarizeBy: none
+		sourceColumn: series
+
+	/// Planning_Model
+	column planning_model
+		dataType: string
+		summarizeBy: none
+		sourceColumn: planning_model
+
+	/// HP_Group
+	column hp_group
+		dataType: string
+		summarizeBy: none
+		sourceColumn: hp_group
+
+	/// Useful_Life_Hours
+	column useful_life_hours
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: useful_life_hours
+
+	/// Useful_Life_Years
+	column useful_life_years
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: useful_life_years
+
+	/// Dealer_Net_Price
+	column dealer_net_price
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: dealer_net_price
+
+	/// MSRP_List
+	column msrp_list
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: msrp_list
+
+	partition dim_machine_useful_life = entity
+		mode: directLake
+		source
+			entityName: dim_machine_useful_life
+			schemaName: operations
+			expressionSource: GoldSqlEndpoint

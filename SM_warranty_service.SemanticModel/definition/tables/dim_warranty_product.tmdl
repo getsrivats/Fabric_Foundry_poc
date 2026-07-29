@@ -1,0 +1,75 @@
+/// DIM - dim_warranty_product. Grain: One row per warranty product.
+table dim_warranty_product
+	/// Primary/surrogate key. ROW_NUMBER() OVER (ORDER BY wp.Id)
+	column warranty_product_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: warranty_product_key
+
+	/// wp.Id
+	column sf_id
+		dataType: string
+		summarizeBy: none
+		sourceColumn: sf_id
+
+	/// wp.WOD_2__Product_Name__c
+	column product_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: product_name
+
+	/// wp.WOD_2__Type__c
+	column product_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: product_type
+
+	/// wp.WOD_2__Item_Type__c
+	column item_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: item_type
+
+	/// wp.WOD_2__Business_Unit__c
+	column business_unit
+		dataType: string
+		summarizeBy: none
+		sourceColumn: business_unit
+
+	/// wp.KBT_Material_Number__c
+	column material_number
+		dataType: string
+		summarizeBy: none
+		sourceColumn: material_number
+
+	/// wp.Material_Group__c
+	column material_group
+		dataType: string
+		summarizeBy: none
+		sourceColumn: material_group
+
+	/// wp.Base_Model__c
+	column base_model
+		dataType: string
+		summarizeBy: none
+		sourceColumn: base_model
+
+	/// wp.Product_Hierarchy__c
+	column product_hierarchy
+		dataType: string
+		summarizeBy: none
+		sourceColumn: product_hierarchy
+
+	/// wp.WOD_2__Standard_Price__c
+	column standard_price
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: standard_price
+
+	partition dim_warranty_product = entity
+		mode: directLake
+		source
+			entityName: dim_warranty_product
+			schemaName: warranty_service
+			expressionSource: GoldSqlEndpoint

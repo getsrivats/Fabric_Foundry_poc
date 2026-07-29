@@ -1,0 +1,90 @@
+/// FACT - fact_delivery. Grain: One row per delivery line.
+table fact_delivery
+	/// Primary/surrogate key. l.VBELN
+	column delivery
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: delivery
+
+	/// i.POSNR
+	column delivery_item
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: delivery_item
+
+	/// i.VGBEL
+	column sales_order
+		dataType: string
+		summarizeBy: none
+		sourceColumn: sales_order
+
+	/// TRY_CAST(i.VGPOS AS INT)
+	column so_item
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: so_item
+
+	/// Foreign key to dimension. CAST(CONVERT(VARCHAR(8), l.WADAT, 112) AS INT)
+	column gi_date_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: gi_date_key
+
+	/// l.WADAT
+	column planned_gi_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: planned_gi_date
+
+	/// l.LDDAT
+	column loading_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: loading_date
+
+	/// TRIM(LEADING '0' FROM l.KUNNR)
+	column dealer_code
+		dataType: string
+		summarizeBy: none
+		sourceColumn: dealer_code
+
+	/// i.MATNR
+	column material
+		dataType: string
+		summarizeBy: none
+		sourceColumn: material
+
+	/// i.WERKS
+	column plant
+		dataType: string
+		summarizeBy: none
+		sourceColumn: plant
+
+	/// i.LFIMG
+	column delivered_qty
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: delivered_qty
+
+	/// l.ROUTE
+	column route
+		dataType: string
+		summarizeBy: none
+		sourceColumn: route
+
+	/// Number of rows (records) in fact_delivery.
+	measure 'fact_delivery Row Count' = COUNTROWS(fact_delivery)
+		formatString: #,0
+
+	/// Sum of delivered qty across the current filter context.
+	measure 'Total Delivered Qty' = SUM(fact_delivery[delivered_qty])
+		formatString: #,0.00
+
+	partition fact_delivery = entity
+		mode: directLake
+		source
+			entityName: fact_delivery
+			schemaName: sales_parts
+			expressionSource: GoldSqlEndpoint

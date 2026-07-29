@@ -1,0 +1,27 @@
+/// DIM - dim_machine_useful_life / dim_cost_center. Grain: One row per material (useful life) / per cost center.
+table dim_cost_center
+	/// Primary/surrogate key.
+	column cost_center
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: cost_center
+
+	/// Cost Center Desc attribute.
+	column cost_center_desc
+		dataType: string
+		summarizeBy: none
+		sourceColumn: cost_center_desc
+
+	/// Company Code attribute.
+	column company_code
+		dataType: string
+		summarizeBy: none
+		sourceColumn: company_code
+
+	partition dim_cost_center = entity
+		mode: directLake
+		source
+			entityName: dim_cost_center
+			schemaName: operations
+			expressionSource: GoldSqlEndpoint

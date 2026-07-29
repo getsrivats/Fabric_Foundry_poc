@@ -1,0 +1,12 @@
+/// Direct Lake semantic model for D7 Training & Learning Analytics. Facts and conformed dimensions from the Gold warehouse; ratio/derived KPIs implemented as measures.
+model SM_training
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+
+ref table fact_training_enrollment
+ref table dim_learner
+ref table dim_course
+ref table dim_curriculum
+ref table bridge_curriculum_course
+ref table dim_date
+ref table dim_dealer

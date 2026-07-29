@@ -1,0 +1,102 @@
+/// FACT - fact_ots_shipment. Grain: One row per ODO line.
+table fact_ots_shipment
+	/// Primary/surrogate key. o.ODO
+	column odo
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: odo
+
+	/// o.ODO_Item
+	column odo_item
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: odo_item
+
+	/// Foreign key to dimension. CAST(CONVERT(VARCHAR(8), o.ODO_Create_Date, 112) AS INT)
+	column create_date_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: create_date_key
+
+	/// o.Expected_Ship_Date
+	column expected_ship_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: expected_ship_date
+
+	/// o.Loading_Date
+	column loading_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: loading_date
+
+	/// o.Dealer
+	column dealer_code
+		dataType: string
+		summarizeBy: none
+		sourceColumn: dealer_code
+
+	/// o.Material
+	column material
+		dataType: string
+		summarizeBy: none
+		sourceColumn: material
+
+	/// o.Plant
+	column plant
+		dataType: string
+		summarizeBy: none
+		sourceColumn: plant
+
+	/// o.Sales_Order
+	column sales_order
+		dataType: string
+		summarizeBy: none
+		sourceColumn: sales_order
+
+	/// o.SO_Item
+	column so_item
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: so_item
+
+	/// o.Order_Type
+	column order_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: order_type
+
+	/// o.ODO_Qty
+	column odo_qty
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: odo_qty
+
+	/// o.Cutoff_flag
+	column cutoff_flag
+		dataType: string
+		summarizeBy: none
+		sourceColumn: cutoff_flag
+
+	/// CASE WHEN o.Loading_Date <= o.Expected_Ship_Date THEN 'Yes' ELSE 'No' END
+	column on_time_flag
+		dataType: string
+		summarizeBy: none
+		sourceColumn: on_time_flag
+
+	/// Number of rows (records) in fact_ots_shipment.
+	measure 'fact_ots_shipment Row Count' = COUNTROWS(fact_ots_shipment)
+		formatString: #,0
+
+	/// Sum of odo qty across the current filter context.
+	measure 'Total Odo Qty' = SUM(fact_ots_shipment[odo_qty])
+		formatString: #,0.00
+
+	partition fact_ots_shipment = entity
+		mode: directLake
+		source
+			entityName: fact_ots_shipment
+			schemaName: order_fulfillment
+			expressionSource: GoldSqlEndpoint

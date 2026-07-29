@@ -1,0 +1,13 @@
+/// Relates dim_dealer to fact_warranty_registration on dealer_code. (dim_dealer is SCD2 - assumes current-row semantics; resolve if versioned joins needed)
+relationship rel_fact_warranty_registration_dealer_code
+	fromColumn: fact_warranty_registration.dealer_code
+	toColumn: dim_dealer.dealer_code
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_date to fact_warranty_registration on reg_date_key.
+relationship rel_fact_warranty_registration_reg_date_key
+	fromColumn: fact_warranty_registration.reg_date_key
+	toColumn: dim_date.date_key
+	crossFilteringBehavior: oneDirection
+	isActive: true

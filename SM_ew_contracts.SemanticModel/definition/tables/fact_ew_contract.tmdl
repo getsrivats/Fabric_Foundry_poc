@@ -1,0 +1,117 @@
+/// FACT - fact_ew_contract (deferred revenue). Grain: One row per EW sales order / contract.
+table fact_ew_contract
+	/// Primary/surrogate key. z.EW_SALES_ORD
+	column ew_sales_order
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: ew_sales_order
+
+	/// z.CONTRACT_NO
+	column contract_number
+		dataType: string
+		summarizeBy: none
+		sourceColumn: contract_number
+
+	/// z.ORDER_TYPE
+	column order_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: order_type
+
+	/// z.MODEL
+	column model
+		dataType: string
+		summarizeBy: none
+		sourceColumn: model
+
+	/// z.SERIAL_NO
+	column serial_number
+		dataType: string
+		summarizeBy: none
+		sourceColumn: serial_number
+
+	/// TRIM(LEADING '0' FROM z.SOLD_TO_PARTY)
+	column sold_to_dealer
+		dataType: string
+		summarizeBy: none
+		sourceColumn: sold_to_dealer
+
+	/// z.EW_START_DT
+	column ew_start_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: ew_start_date
+
+	/// z.EW_END_DT
+	column ew_end_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: ew_end_date
+
+	/// DATEDIFF(DAY, z.EW_START_DT, z.EW_END_DT)
+	column ew_days
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: ew_days
+
+	/// CASE WHEN z.EW_START_DT <= CAST(GETDATE() AS DATE) THEN DATEDIFF(DAY, z.EW_START_DT, CASE WHEN z.EW_END_DT < CAST(GET...
+	column elapsed_days
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: elapsed_days
+
+	/// z.DURATION
+	column ew_term_months
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: ew_term_months
+
+	/// z.DSI_AMOUNT
+	column dsi_amount
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: dsi_amount
+
+	/// z.NET_VALUE
+	column net_value
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: net_value
+
+	/// -- straight-line recognition over the EW window CASE WHEN DATEDIFF(DAY, z.EW_START_DT, z.EW_END_DT) > 0 THEN z.NET_VA...
+	column recognized_rev
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: recognized_rev
+
+	/// z.NET_VALUE - CASE WHEN DATEDIFF(DAY,z.EW_START_DT,z.EW_END_DT) > 0 THEN z.NET_VALUE * DATEDIFF(DAY, z.EW_START_DT, C...
+	column deferred_rev
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: deferred_rev
+
+	/// z.REG_STATUS
+	column reg_status
+		dataType: string
+		summarizeBy: none
+		sourceColumn: reg_status
+
+	/// Number of rows (records) in fact_ew_contract.
+	measure 'fact_ew_contract Row Count' = COUNTROWS(fact_ew_contract)
+		formatString: #,0
+
+	/// Sum of dsi amount across the current filter context.
+	measure 'Total Dsi Amount' = SUM(fact_ew_contract[dsi_amount])
+		formatString: #,0.00
+
+	/// Sum of net value across the current filter context.
+	measure 'Total Net Value' = SUM(fact_ew_contract[net_value])
+		formatString: #,0.00
+
+	partition fact_ew_contract = entity
+		mode: directLake
+		source
+			entityName: fact_ew_contract
+			schemaName: ew_contracts
+			expressionSource: GoldSqlEndpoint

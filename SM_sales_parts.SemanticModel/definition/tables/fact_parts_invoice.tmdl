@@ -1,0 +1,150 @@
+/// FACT - fact_parts_invoice. Grain: One row per invoice line (billing doc + item), ECC and S/4 unioned.
+table fact_parts_invoice
+	/// Primary/surrogate key. p.VBELN
+	column billing_doc
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: billing_doc
+
+	/// p.POSNR
+	column billing_item
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: billing_item
+
+	/// 'S4'
+	column source_system
+		dataType: string
+		summarizeBy: none
+		sourceColumn: source_system
+
+	/// Foreign key to dimension. CAST(CONVERT(VARCHAR(8), k.FKDAT, 112) AS INT)
+	column invoice_date_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: invoice_date_key
+
+	/// TRIM(LEADING '0' FROM k.KUNAG)
+	column dealer_code
+		dataType: string
+		summarizeBy: none
+		sourceColumn: dealer_code
+
+	/// p.MATNR
+	column material
+		dataType: string
+		summarizeBy: none
+		sourceColumn: material
+
+	/// p.WERKS
+	column plant
+		dataType: string
+		summarizeBy: none
+		sourceColumn: plant
+
+	/// p.AUBEL
+	column sales_order
+		dataType: string
+		summarizeBy: none
+		sourceColumn: sales_order
+
+	/// p.AUPOS
+	column so_item
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: so_item
+
+	/// k.FKART
+	column billing_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: billing_type
+
+	/// -- sign-adjust: returns / cancellations negative CASE WHEN p.SHKZG = 'X' THEN -p.FKIMG ELSE p.FKIMG END
+	column qty
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: qty
+
+	/// CASE WHEN p.SHKZG = 'X' THEN -p.KZWI1 ELSE p.KZWI1 END
+	column list_price_amt
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: list_price_amt
+
+	/// CASE WHEN p.SHKZG = 'X' THEN -p.KZWI2 ELSE p.KZWI2 END
+	column dnet_amt
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: dnet_amt
+
+	/// CASE WHEN p.SHKZG = 'X' THEN -p.KZWI3 ELSE p.KZWI3 END
+	column dnp_amt
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: dnp_amt
+
+	/// CASE WHEN p.SHKZG = 'X' THEN -p.KZWI4 ELSE p.KZWI4 END
+	column freight_amt
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: freight_amt
+
+	/// CASE WHEN p.SHKZG = 'X' THEN -p.NETWR ELSE p.NETWR END
+	column invoice_amt
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: invoice_amt
+
+	/// CASE WHEN p.SHKZG = 'X' THEN -p.WAVWR ELSE p.WAVWR END
+	column cogs_amt
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: cogs_amt
+
+	/// k.WAERK
+	column currency
+		dataType: string
+		summarizeBy: none
+		sourceColumn: currency
+
+	/// Number of rows (records) in fact_parts_invoice.
+	measure 'fact_parts_invoice Row Count' = COUNTROWS(fact_parts_invoice)
+		formatString: #,0
+
+	/// Sum of qty across the current filter context.
+	measure 'Total Qty' = SUM(fact_parts_invoice[qty])
+		formatString: #,0.00
+
+	/// Sum of list price amt across the current filter context.
+	measure 'Total List Price Amt' = SUM(fact_parts_invoice[list_price_amt])
+		formatString: #,0.00
+
+	/// Sum of dnet amt across the current filter context.
+	measure 'Total Dnet Amt' = SUM(fact_parts_invoice[dnet_amt])
+		formatString: #,0.00
+
+	/// Sum of dnp amt across the current filter context.
+	measure 'Total Dnp Amt' = SUM(fact_parts_invoice[dnp_amt])
+		formatString: #,0.00
+
+	/// Sum of freight amt across the current filter context.
+	measure 'Total Freight Amt' = SUM(fact_parts_invoice[freight_amt])
+		formatString: #,0.00
+
+	/// Sum of invoice amt across the current filter context.
+	measure 'Total Invoice Amt' = SUM(fact_parts_invoice[invoice_amt])
+		formatString: #,0.00
+
+	/// Sum of cogs amt across the current filter context.
+	measure 'Total Cogs Amt' = SUM(fact_parts_invoice[cogs_amt])
+		formatString: #,0.00
+
+	partition fact_parts_invoice = entity
+		mode: directLake
+		source
+			entityName: fact_parts_invoice
+			schemaName: sales_parts
+			expressionSource: GoldSqlEndpoint

@@ -1,0 +1,107 @@
+/// FACT - fact_storage_bin_snapshot. Grain: One row per bin x material x snapshot date.
+table fact_storage_bin_snapshot
+	/// Primary/surrogate key. CAST(CONVERT(VARCHAR(8), GETDATE(), 112) AS INT)
+	column snapshot_date_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: snapshot_date_key
+
+	/// sb.WH_NO
+	column wh_no
+		dataType: string
+		summarizeBy: none
+		sourceColumn: wh_no
+
+	/// sb.PLANT
+	column plant
+		dataType: string
+		summarizeBy: none
+		sourceColumn: plant
+
+	/// sb.STORAGE_BIN
+	column storage_bin
+		dataType: string
+		summarizeBy: none
+		sourceColumn: storage_bin
+
+	/// sb.STORAGE_TYPE
+	column storage_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: storage_type
+
+	/// q.MATNR
+	column material
+		dataType: string
+		summarizeBy: none
+		sourceColumn: material
+
+	/// q.QUAN
+	column qty_on_hand
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: qty_on_hand
+
+	/// mb.VERPR
+	column std_price
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: std_price
+
+	/// q.QUAN * mb.VERPR
+	column stock_value
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: stock_value
+
+	/// CASE WHEN sb.MAX_CAPACITY > 0 THEN 1.0 - sb.REMAIN_CAPACITY / sb.MAX_CAPACITY END
+	column capacity_used_pct
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: capacity_used_pct
+
+	/// CASE WHEN sb.SB_EMPTY = 'X' THEN 1 ELSE 0 END
+	column is_empty
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: is_empty
+
+	/// CASE WHEN sb.STOCK_PUTAWAY_BLOCK = 'X' THEN 1 ELSE 0 END
+	column putaway_blocked
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: putaway_blocked
+
+	/// CASE WHEN sb.STOCK_REMOVAL_BLOCK = 'X' THEN 1 ELSE 0 END
+	column removal_blocked
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: removal_blocked
+
+	/// Number of rows (records) in fact_storage_bin_snapshot.
+	measure 'fact_storage_bin_snapshot Row Count' = COUNTROWS(fact_storage_bin_snapshot)
+		formatString: #,0
+
+	/// Sum of qty on hand across the current filter context.
+	measure 'Total Qty On Hand' = SUM(fact_storage_bin_snapshot[qty_on_hand])
+		formatString: #,0.00
+
+	/// Sum of std price across the current filter context.
+	measure 'Total Std Price' = SUM(fact_storage_bin_snapshot[std_price])
+		formatString: #,0.00
+
+	/// Sum of stock value across the current filter context.
+	measure 'Total Stock Value' = SUM(fact_storage_bin_snapshot[stock_value])
+		formatString: #,0.00
+
+	/// Sum of capacity used pct across the current filter context.
+	measure 'Total Capacity Used Pct' = SUM(fact_storage_bin_snapshot[capacity_used_pct])
+		formatString: #,0.00
+
+	partition fact_storage_bin_snapshot = entity
+		mode: directLake
+		source
+			entityName: fact_storage_bin_snapshot
+			schemaName: order_fulfillment
+			expressionSource: GoldSqlEndpoint

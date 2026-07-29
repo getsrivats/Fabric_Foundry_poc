@@ -1,0 +1,69 @@
+/// PLP - plp_vendor_pir. Grain: One row per material x vendor x validity window.
+table plp_vendor_pir
+	/// Primary/surrogate key. a.MATNR
+	column material
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: material
+
+	/// a.LIFNR
+	column vendor_code
+		dataType: string
+		summarizeBy: none
+		sourceColumn: vendor_code
+
+	/// a.EKORG
+	column purch_org
+		dataType: string
+		summarizeBy: none
+		sourceColumn: purch_org
+
+	/// a.DATAB
+	column valid_from
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: valid_from
+
+	/// a.DATBI
+	column valid_to
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: valid_to
+
+	/// MAX(k.KBETR)
+	column pir_unit_cost
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: pir_unit_cost
+
+	/// MAX(k.KPEIN)
+	column price_unit
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: price_unit
+
+	/// MAX(k.KONWA)
+	column currency
+		dataType: string
+		summarizeBy: none
+		sourceColumn: currency
+
+	/// MAX(e.NORBM)
+	column norm_qty
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: norm_qty
+
+	/// MAX(e.APLFZ)
+	column lead_time_days
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: lead_time_days
+
+	partition plp_vendor_pir = entity
+		mode: directLake
+		source
+			entityName: plp_vendor_pir
+			schemaName: procurement
+			expressionSource: GoldSqlEndpoint

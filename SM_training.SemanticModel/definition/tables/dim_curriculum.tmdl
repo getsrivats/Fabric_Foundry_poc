@@ -1,0 +1,40 @@
+/// DIM - dim_course / dim_curriculum + bridge. Grain: One row per course / per curriculum / per curriculum-course pair.
+table dim_curriculum
+	/// Primary/surrogate key.
+	column curriculum_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: curriculum_key
+
+	/// Curriculum Id attribute.
+	column curriculum_id
+		dataType: string
+		summarizeBy: none
+		sourceColumn: curriculum_id
+
+	/// Curriculum Name attribute.
+	column curriculum_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: curriculum_name
+
+	/// Foreign key to a dimension.
+	column category_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: category_key
+
+	/// Active Status attribute.
+	column active_status
+		dataType: string
+		summarizeBy: none
+		sourceColumn: active_status
+
+	partition dim_curriculum = entity
+		mode: directLake
+		source
+			entityName: dim_curriculum
+			schemaName: training
+			expressionSource: GoldSqlEndpoint

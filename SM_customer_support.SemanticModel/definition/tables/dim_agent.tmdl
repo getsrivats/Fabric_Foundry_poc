@@ -1,0 +1,27 @@
+/// DIM - dim_agent / dim_survey_type / dim_issue_category. Grain: One row per agent / survey type / issue category.
+table dim_agent
+	/// Primary/surrogate key.
+	column agent_id
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: agent_id
+
+	/// Agent Name attribute.
+	column agent_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: agent_name
+
+	/// Status attribute.
+	column status
+		dataType: string
+		summarizeBy: none
+		sourceColumn: status
+
+	partition dim_agent = entity
+		mode: directLake
+		source
+			entityName: dim_agent
+			schemaName: customer_support
+			expressionSource: GoldSqlEndpoint

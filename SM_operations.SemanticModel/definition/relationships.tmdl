@@ -1,0 +1,41 @@
+/// Relates dim_machine to fact_machine_usage_daily on machine_pin.
+relationship rel_fact_machine_usage_daily_machine_pin
+	fromColumn: fact_machine_usage_daily.machine_pin
+	toColumn: dim_machine.machine_pin
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_date to fact_machine_usage_daily on usage_date_key.
+relationship rel_fact_machine_usage_daily_usage_date_key
+	fromColumn: fact_machine_usage_daily.usage_date_key
+	toColumn: dim_date.date_key
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_machine to fact_mpo_parts_labor on machine_pin.
+relationship rel_fact_mpo_parts_labor_machine_pin
+	fromColumn: fact_mpo_parts_labor.machine_pin
+	toColumn: dim_machine.machine_pin
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_dealer to fact_mpo_parts_labor on dealer_code. (dim_dealer is SCD2 - assumes current-row semantics; resolve if versioned joins needed)
+relationship rel_fact_mpo_parts_labor_dealer_code
+	fromColumn: fact_mpo_parts_labor.dealer_code
+	toColumn: dim_dealer.dealer_code
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_date to fact_expense_actual_plan on period_key.
+relationship rel_fact_expense_actual_plan_period_key
+	fromColumn: fact_expense_actual_plan.period_key
+	toColumn: dim_date.date_key
+	crossFilteringBehavior: oneDirection
+	isActive: true
+
+/// Relates dim_cost_center to fact_expense_actual_plan on cost_center.
+relationship rel_fact_expense_actual_plan_cost_center
+	fromColumn: fact_expense_actual_plan.cost_center
+	toColumn: dim_cost_center.cost_center
+	crossFilteringBehavior: oneDirection
+	isActive: true

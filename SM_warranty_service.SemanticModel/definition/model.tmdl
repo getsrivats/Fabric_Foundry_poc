@@ -1,0 +1,13 @@
+/// Direct Lake semantic model for D5 Warranty & Service Analytics. Facts and conformed dimensions from the Gold warehouse; ratio/derived KPIs implemented as measures.
+model SM_warranty_service
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+
+ref table dim_warranty_product
+ref table fact_warranty_claim
+ref table fact_warranty_claim_part
+ref table fact_warranty_claim_labor
+ref table fact_warranty_other_cost
+ref table dim_date
+ref table dim_dealer
+ref table dim_material

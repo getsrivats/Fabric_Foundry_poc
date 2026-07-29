@@ -1,0 +1,8 @@
+/// Direct Lake semantic model for D4 Dealer Performance & Management. Facts and conformed dimensions from the Gold warehouse; ratio/derived KPIs implemented as measures.
+model SM_dealer_performance
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+
+ref table fact_dealer_kpi_weekly
+ref table fact_ecom_order_item
+ref table dim_date

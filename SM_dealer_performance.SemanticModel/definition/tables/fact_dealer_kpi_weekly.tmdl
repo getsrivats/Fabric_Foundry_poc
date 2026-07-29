@@ -1,0 +1,147 @@
+/// FACT - fact_dealer_kpi_weekly. Grain: One row per dealer store per weekly period.
+table fact_dealer_kpi_weekly
+	/// Primary/surrogate key. ds.WKLY_PRD
+	column wkly_prd
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: wkly_prd
+
+	/// ds.WH_CODE
+	column wh_code
+		dataType: string
+		summarizeBy: none
+		sourceColumn: wh_code
+
+	/// ds.WH_GRP
+	column wh_grp
+		dataType: string
+		summarizeBy: none
+		sourceColumn: wh_grp
+
+	/// ds.DBS
+	column dbs_code
+		dataType: string
+		summarizeBy: none
+		sourceColumn: dbs_code
+
+	/// ds.FACING_DC
+	column facing_dc
+		dataType: string
+		summarizeBy: none
+		sourceColumn: facing_dc
+
+	/// ds.EXTRACT_DT
+	column extract_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: extract_date
+
+	/// ds.ITEM_COMPLIANCE_NUM_STKD
+	column compliance_num_stkd
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: compliance_num_stkd
+
+	/// ds.ITEM_COMPLIANCE_NUM_NS
+	column compliance_num_ns
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: compliance_num_ns
+
+	/// ds.COMPLIANCE_DEN_STKD
+	column compliance_den_stkd
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: compliance_den_stkd
+
+	/// ds.COMPLIANCE_DEN_NS
+	column compliance_den_ns
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: compliance_den_ns
+
+	/// ds.PICK_FILL_NUM_STKD
+	column pick_fill_num_stkd
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: pick_fill_num_stkd
+
+	/// ds.PICK_FILL_DEN_STKD
+	column pick_fill_den_stkd
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: pick_fill_den_stkd
+
+	/// ds.ITEM_FILL_NUM_STKD
+	column item_fill_num_stkd
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: item_fill_num_stkd
+
+	/// ds.ITEM_FILL_DEN_STKD
+	column item_fill_den_stkd
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: item_fill_den_stkd
+
+	/// ds.VAL_STKD_HEALTHY
+	column val_stkd_healthy
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: val_stkd_healthy
+
+	/// ds.VAL_STKD_OBSOLETE
+	column val_stkd_obsolete
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: val_stkd_obsolete
+
+	/// ds.CURRENT_STK_VAL
+	column current_stk_val
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: current_stk_val
+
+	/// ds.BO_VAL
+	column bo_val
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: bo_val
+
+	/// ds.EXPORTED_ORD_VAL_WKLY
+	column exported_ord_val_wkly
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: exported_ord_val_wkly
+
+	/// Number of rows (records) in fact_dealer_kpi_weekly.
+	measure 'fact_dealer_kpi_weekly Row Count' = COUNTROWS(fact_dealer_kpi_weekly)
+		formatString: #,0
+
+	/// Sum of val stkd healthy across the current filter context.
+	measure 'Total Val Stkd Healthy' = SUM(fact_dealer_kpi_weekly[val_stkd_healthy])
+		formatString: #,0.00
+
+	/// Sum of val stkd obsolete across the current filter context.
+	measure 'Total Val Stkd Obsolete' = SUM(fact_dealer_kpi_weekly[val_stkd_obsolete])
+		formatString: #,0.00
+
+	/// Sum of current stk val across the current filter context.
+	measure 'Total Current Stk Val' = SUM(fact_dealer_kpi_weekly[current_stk_val])
+		formatString: #,0.00
+
+	/// Sum of bo val across the current filter context.
+	measure 'Total Bo Val' = SUM(fact_dealer_kpi_weekly[bo_val])
+		formatString: #,0.00
+
+	/// Sum of exported ord val wkly across the current filter context.
+	measure 'Total Exported Ord Val Wkly' = SUM(fact_dealer_kpi_weekly[exported_ord_val_wkly])
+		formatString: #,0.00
+
+	partition fact_dealer_kpi_weekly = entity
+		mode: directLake
+		source
+			entityName: fact_dealer_kpi_weekly
+			schemaName: dealer_performance
+			expressionSource: GoldSqlEndpoint

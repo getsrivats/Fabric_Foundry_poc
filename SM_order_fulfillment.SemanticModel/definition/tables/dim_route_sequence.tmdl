@@ -1,0 +1,45 @@
+/// DIM - dim_route_sequence. Grain: One row per customer group route entry.
+table dim_route_sequence
+	/// Primary/surrogate key. ROW_NUMBER() OVER (ORDER BY z.customer_group, z.rdd_day_seq)
+	column route_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: route_key
+
+	/// z.customer_group
+	column customer_group
+		dataType: string
+		summarizeBy: none
+		sourceColumn: customer_group
+
+	/// z.route_day
+	column route_day
+		dataType: string
+		summarizeBy: none
+		sourceColumn: route_day
+
+	/// z.rdd_day_seq
+	column rdd_day_seq
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: rdd_day_seq
+
+	/// z.plant
+	column plant
+		dataType: string
+		summarizeBy: none
+		sourceColumn: plant
+
+	/// 0
+	column is_unit_down
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: is_unit_down
+
+	partition dim_route_sequence = entity
+		mode: directLake
+		source
+			entityName: dim_route_sequence
+			schemaName: order_fulfillment
+			expressionSource: GoldSqlEndpoint

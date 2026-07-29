@@ -1,0 +1,45 @@
+/// DIM - dim_plant. Grain: One row per plant.
+table dim_plant
+	/// Primary/surrogate key. ROW_NUMBER() OVER (ORDER BY s.Plant)
+	column plant_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: plant_key
+
+	/// s.Plant
+	column plant
+		dataType: string
+		summarizeBy: none
+		sourceColumn: plant
+
+	/// s.Plant_Name
+	column plant_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: plant_name
+
+	/// s.Plant_SEQ
+	column plant_seq
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: plant_seq
+
+	/// NULL
+	column region
+		dataType: string
+		summarizeBy: none
+		sourceColumn: region
+
+	/// 1
+	column is_parts_dc
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: is_parts_dc
+
+	partition dim_plant = entity
+		mode: directLake
+		source
+			entityName: dim_plant
+			schemaName: conformed
+			expressionSource: GoldSqlEndpoint

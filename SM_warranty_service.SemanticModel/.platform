@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "SM_warranty_service"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "24949ab5-d718-4e2c-a76b-c25033bd42fe"
+  }
+}

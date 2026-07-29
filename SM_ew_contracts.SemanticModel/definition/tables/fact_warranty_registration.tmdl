@@ -1,0 +1,98 @@
+/// FACT - fact_warranty_registration. Grain: One row per registration.
+table fact_warranty_registration
+	/// Primary/surrogate key. r.Id
+	column registration_sf_id
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: registration_sf_id
+
+	/// inv.WOD_2__Serial_Number__c
+	column machine_serial
+		dataType: string
+		summarizeBy: none
+		sourceColumn: machine_serial
+
+	/// r.Model__c
+	column model
+		dataType: string
+		summarizeBy: none
+		sourceColumn: model
+
+	/// TRIM(LEADING '0' FROM r.Delivery_Dealer__c)
+	column dealer_code
+		dataType: string
+		summarizeBy: none
+		sourceColumn: dealer_code
+
+	/// r.WOD_2__Warranty_Product__c
+	column warranty_product_id
+		dataType: string
+		summarizeBy: none
+		sourceColumn: warranty_product_id
+
+	/// r.WOD_2__Registration_Type__c
+	column registration_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: registration_type
+
+	/// r.WOD_2__Status__c
+	column status
+		dataType: string
+		summarizeBy: none
+		sourceColumn: status
+
+	/// Foreign key to dimension. CAST(CONVERT(VARCHAR(8), r.WOD_2__Registration_Date__c,112) AS INT)
+	column reg_date_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: reg_date_key
+
+	/// r.Contract_Number__c
+	column contract_number
+		dataType: string
+		summarizeBy: none
+		sourceColumn: contract_number
+
+	/// r.Contract_Date__c
+	column contract_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: contract_date
+
+	/// r.WOD_2__Warranty_Start_Date__c
+	column warranty_start_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: warranty_start_date
+
+	/// r.WOD_2__Warranty_End_Date__c
+	column warranty_end_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: warranty_end_date
+
+	/// r.De_Registered_Date__c
+	column dereg_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: dereg_date
+
+	/// r.WOD_2__Maximum_Unit__c
+	column max_units
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: max_units
+
+	/// Number of rows (records) in fact_warranty_registration.
+	measure 'fact_warranty_registration Row Count' = COUNTROWS(fact_warranty_registration)
+		formatString: #,0
+
+	partition fact_warranty_registration = entity
+		mode: directLake
+		source
+			entityName: fact_warranty_registration
+			schemaName: ew_contracts
+			expressionSource: GoldSqlEndpoint

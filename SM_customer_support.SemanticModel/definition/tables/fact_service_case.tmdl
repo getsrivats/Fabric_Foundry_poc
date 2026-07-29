@@ -1,0 +1,91 @@
+/// FACT - fact_service_case. Grain: One row per case.
+table fact_service_case
+	/// Primary/surrogate key. c.Id
+	column case_sf_id
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: case_sf_id
+
+	/// c.AccountId
+	column account_id
+		dataType: string
+		summarizeBy: none
+		sourceColumn: account_id
+
+	/// c.PIN__c
+	column machine_pin
+		dataType: string
+		summarizeBy: none
+		sourceColumn: machine_pin
+
+	/// c.Model_Number__c
+	column model
+		dataType: string
+		summarizeBy: none
+		sourceColumn: model
+
+	/// c.Case_Record_Type__c
+	column case_record_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: case_record_type
+
+	/// c.Type
+	column case_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: case_type
+
+	/// c.Business_Units__c
+	column business_unit
+		dataType: string
+		summarizeBy: none
+		sourceColumn: business_unit
+
+	/// c.Status__c
+	column status
+		dataType: string
+		summarizeBy: none
+		sourceColumn: status
+
+	/// Foreign key to dimension. CAST(CONVERT(VARCHAR(8), c.Date_Opened__c,112) AS INT)
+	column open_date_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: open_date_key
+
+	/// Foreign key to dimension. CAST(CONVERT(VARCHAR(8), c.Date_Closed__c,112) AS INT)
+	column closed_date_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: closed_date_key
+
+	/// DATEDIFF(DAY, c.Date_Opened__c, COALESCE(c.Date_Closed__c, CAST(GETDATE() AS DATE)))
+	column resolution_days
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: resolution_days
+
+	/// c.Current_Engine_Hours__c
+	column engine_hours
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: engine_hours
+
+	/// Number of rows (records) in fact_service_case.
+	measure 'fact_service_case Row Count' = COUNTROWS(fact_service_case)
+		formatString: #,0
+
+	/// Sum of engine hours across the current filter context.
+	measure 'Total Engine Hours' = SUM(fact_service_case[engine_hours])
+		formatString: #,0.00
+
+	partition fact_service_case = entity
+		mode: directLake
+		source
+			entityName: fact_service_case
+			schemaName: customer_support
+			expressionSource: GoldSqlEndpoint

@@ -1,0 +1,105 @@
+/// FACT - fact_training_enrollment. Grain: One row per enrollment (course or curriculum discriminated).
+table fact_training_enrollment
+	/// Primary/surrogate key. e.COURSE_ENROLLMENT_KEY
+	column enrollment_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: enrollment_key
+
+	/// 'COURSE'
+	column enrollment_level
+		dataType: string
+		summarizeBy: none
+		sourceColumn: enrollment_level
+
+	/// Foreign key to dimension. e.USER_KEY
+	column user_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: user_key
+
+	/// Foreign key to dimension. e.COURSE_KEY
+	column course_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: course_key
+
+	/// Foreign key to dimension. NULL
+	column curriculum_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: curriculum_key
+
+	/// e.STATUS
+	column status
+		dataType: string
+		summarizeBy: none
+		sourceColumn: status
+
+	/// e.ENROLLMENT_TYPE
+	column enrollment_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: enrollment_type
+
+	/// e.DATE_STARTED
+	column date_started
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: date_started
+
+	/// e.DATE_COMPLETED
+	column date_completed
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: date_completed
+
+	/// Foreign key to dimension. CAST(CONVERT(VARCHAR(8), e.DATE_COMPLETED,112) AS INT)
+	column completion_date_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: completion_date_key
+
+	/// e.PROGRESS
+	column progress_pct
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: progress_pct
+
+	/// e.SCORE
+	column score
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: score
+
+	/// e.TIME_SPENT_SECONDS
+	column time_spent_secs
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: time_spent_secs
+
+	/// CASE WHEN ac.AWARDED_CERTIFICATE_KEY IS NOT NULL THEN 1 ELSE 0 END
+	column certified_flag
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: certified_flag
+
+	/// Number of rows (records) in fact_training_enrollment.
+	measure 'fact_training_enrollment Row Count' = COUNTROWS(fact_training_enrollment)
+		formatString: #,0
+
+	/// Sum of progress pct across the current filter context.
+	measure 'Total Progress Pct' = SUM(fact_training_enrollment[progress_pct])
+		formatString: #,0.00
+
+	partition fact_training_enrollment = entity
+		mode: directLake
+		source
+			entityName: fact_training_enrollment
+			schemaName: training
+			expressionSource: GoldSqlEndpoint

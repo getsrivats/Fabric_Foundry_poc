@@ -1,0 +1,152 @@
+/// FACT - fact_purchase_order_item. Grain: One row per PO line.
+table fact_purchase_order_item
+	/// Primary/surrogate key. h.EBELN
+	column po_number
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: po_number
+
+	/// i.EBELP
+	column po_item
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: po_item
+
+	/// Foreign key to dimension. CAST(CONVERT(VARCHAR(8), h.BEDAT, 112) AS INT)
+	column doc_date_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: doc_date_key
+
+	/// h.LIFNR
+	column vendor_code
+		dataType: string
+		summarizeBy: none
+		sourceColumn: vendor_code
+
+	/// i.MATNR
+	column material
+		dataType: string
+		summarizeBy: none
+		sourceColumn: material
+
+	/// i.WERKS
+	column plant
+		dataType: string
+		summarizeBy: none
+		sourceColumn: plant
+
+	/// h.EKGRP
+	column purch_grp
+		dataType: string
+		summarizeBy: none
+		sourceColumn: purch_grp
+
+	/// h.BSART
+	column doc_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: doc_type
+
+	/// CASE WHEN i.MATKL LIKE 'PT%' THEN 'PT' ELSE 'WG' END
+	column division
+		dataType: string
+		summarizeBy: none
+		sourceColumn: division
+
+	/// i.MENGE
+	column order_qty
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: order_qty
+
+	/// COALESCE(gr.gr_qty, 0)
+	column gr_net_qty
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: gr_net_qty
+
+	/// COALESCE(inv.inv_qty, 0)
+	column invoice_qty
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: invoice_qty
+
+	/// i.MENGE - COALESCE(gr.gr_qty, 0)
+	column open_qty
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: open_qty
+
+	/// i.NETPR
+	column net_price
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: net_price
+
+	/// i.NETWR
+	column net_value
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: net_value
+
+	/// COALESCE(NULLIF(i.PLIFZ,0), CASE WHEN i.MATKL LIKE 'PT%' THEN 21 ELSE 14 END)
+	column lead_time_days
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: lead_time_days
+
+	/// dd.next_business_date
+	column est_delivery_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: est_delivery_date
+
+	/// CASE WHEN i.MENGE > COALESCE(gr.gr_qty,0) AND DATEADD(DAY, i.PLIFZ, h.BEDAT) < CAST(GETDATE() AS DATE) THEN 1 ELSE 0 END
+	column is_past_due
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: is_past_due
+
+	/// CASE WHEN i.LOEKZ <> '' THEN 1 ELSE 0 END
+	column line_deleted
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: line_deleted
+
+	/// Number of rows (records) in fact_purchase_order_item.
+	measure 'fact_purchase_order_item Row Count' = COUNTROWS(fact_purchase_order_item)
+		formatString: #,0
+
+	/// Sum of order qty across the current filter context.
+	measure 'Total Order Qty' = SUM(fact_purchase_order_item[order_qty])
+		formatString: #,0.00
+
+	/// Sum of gr net qty across the current filter context.
+	measure 'Total Gr Net Qty' = SUM(fact_purchase_order_item[gr_net_qty])
+		formatString: #,0.00
+
+	/// Sum of invoice qty across the current filter context.
+	measure 'Total Invoice Qty' = SUM(fact_purchase_order_item[invoice_qty])
+		formatString: #,0.00
+
+	/// Sum of open qty across the current filter context.
+	measure 'Total Open Qty' = SUM(fact_purchase_order_item[open_qty])
+		formatString: #,0.00
+
+	/// Sum of net price across the current filter context.
+	measure 'Total Net Price' = SUM(fact_purchase_order_item[net_price])
+		formatString: #,0.00
+
+	/// Sum of net value across the current filter context.
+	measure 'Total Net Value' = SUM(fact_purchase_order_item[net_value])
+		formatString: #,0.00
+
+	partition fact_purchase_order_item = entity
+		mode: directLake
+		source
+			entityName: fact_purchase_order_item
+			schemaName: procurement
+			expressionSource: GoldSqlEndpoint

@@ -1,0 +1,87 @@
+/// DIM - dim_service_campaign. Grain: One row per campaign.
+table dim_service_campaign
+	/// Primary/surrogate key. ROW_NUMBER() OVER (ORDER BY sc.Id)
+	column campaign_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: campaign_key
+
+	/// sc.Id
+	column sf_id
+		dataType: string
+		summarizeBy: none
+		sourceColumn: sf_id
+
+	/// sc.Campaign_Id__c
+	column campaign_id
+		dataType: string
+		summarizeBy: none
+		sourceColumn: campaign_id
+
+	/// sc.Name
+	column campaign_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: campaign_name
+
+	/// sc.Campaign_Class__c
+	column campaign_class
+		dataType: string
+		summarizeBy: none
+		sourceColumn: campaign_class
+
+	/// sc.Campaign_Type__c
+	column campaign_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: campaign_type
+
+	/// sc.Priority__c
+	column priority
+		dataType: string
+		summarizeBy: none
+		sourceColumn: priority
+
+	/// sc.Status__c
+	column status
+		dataType: string
+		summarizeBy: none
+		sourceColumn: status
+
+	/// sc.Start_Date__c
+	column start_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: start_date
+
+	/// sc.End_Date__c
+	column end_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: end_date
+
+	/// sc.Estimated_Budget__c
+	column estimated_budget
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: estimated_budget
+
+	/// sc.Consumed_Budget__c
+	column consumed_budget
+		dataType: decimal
+		summarizeBy: none
+		sourceColumn: consumed_budget
+
+	/// CASE WHEN sc.CPSC_Reportable__c = 'true' THEN 1 ELSE 0 END
+	column cpsc_reportable_flag
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: cpsc_reportable_flag
+
+	partition dim_service_campaign = entity
+		mode: directLake
+		source
+			entityName: dim_service_campaign
+			schemaName: field_service
+			expressionSource: GoldSqlEndpoint
