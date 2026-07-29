@@ -133,12 +133,6 @@ table dim_dealer
 		summarizeBy: none
 		sourceColumn: pbi_rls_group
 
-	/// Hash Diff attribute.
-	column hash_diff
-		dataType: string
-		summarizeBy: none
-		sourceColumn: hash_diff
-
 	/// Effective From attribute.
 	column effective_from
 		dataType: dateTime
