@@ -54,7 +54,7 @@ table agg_monthly_parts_sales
 		formatString: #,0
 
 	/// Sum of qty across the current filter context.
-	measure 'Total Qty' = SUM(agg_monthly_parts_sales[qty])
+	measure 'Total Qty (agg_monthly_parts_sales)' = SUM(agg_monthly_parts_sales[qty])
 		formatString: #,0.00
 
 	/// Sum of ttl dnet across the current filter context.
@@ -62,7 +62,7 @@ table agg_monthly_parts_sales
 		formatString: #,0.00
 
 	/// Sum of invoice amt across the current filter context.
-	measure 'Total Invoice Amt' = SUM(agg_monthly_parts_sales[invoice_amt])
+	measure 'Total Invoice Amt (agg_monthly_parts_sales)' = SUM(agg_monthly_parts_sales[invoice_amt])
 		formatString: #,0.00
 
 	/// Sum of order count across the current filter context.

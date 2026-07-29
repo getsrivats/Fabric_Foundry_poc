@@ -115,7 +115,7 @@ table fact_parts_invoice
 		formatString: #,0
 
 	/// Sum of qty across the current filter context.
-	measure 'Total Qty' = SUM(fact_parts_invoice[qty])
+	measure 'Total Qty (fact_parts_invoice)' = SUM(fact_parts_invoice[qty])
 		formatString: #,0.00
 
 	/// Sum of list price amt across the current filter context.
@@ -135,7 +135,7 @@ table fact_parts_invoice
 		formatString: #,0.00
 
 	/// Sum of invoice amt across the current filter context.
-	measure 'Total Invoice Amt' = SUM(fact_parts_invoice[invoice_amt])
+	measure 'Total Invoice Amt (fact_parts_invoice)' = SUM(fact_parts_invoice[invoice_amt])
 		formatString: #,0.00
 
 	/// Sum of cogs amt across the current filter context.

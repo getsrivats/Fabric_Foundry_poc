@@ -110,11 +110,11 @@ table fact_backorder
 		formatString: #,0
 
 	/// Sum of order qty across the current filter context.
-	measure 'Total Order Qty' = SUM(fact_backorder[order_qty])
+	measure 'Total Order Qty (fact_backorder)' = SUM(fact_backorder[order_qty])
 		formatString: #,0.00
 
 	/// Sum of confirmed qty across the current filter context.
-	measure 'Total Confirmed Qty' = SUM(fact_backorder[confirmed_qty])
+	measure 'Total Confirmed Qty (fact_backorder)' = SUM(fact_backorder[confirmed_qty])
 		formatString: #,0.00
 
 	/// Sum of delivered qty across the current filter context.

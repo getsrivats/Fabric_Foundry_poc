@@ -121,11 +121,11 @@ table fact_fill_rate
 		formatString: #,0
 
 	/// Sum of order qty across the current filter context.
-	measure 'Total Order Qty' = SUM(fact_fill_rate[order_qty])
+	measure 'Total Order Qty (fact_fill_rate)' = SUM(fact_fill_rate[order_qty])
 		formatString: #,0.00
 
 	/// Sum of confirmed qty across the current filter context.
-	measure 'Total Confirmed Qty' = SUM(fact_fill_rate[confirmed_qty])
+	measure 'Total Confirmed Qty (fact_fill_rate)' = SUM(fact_fill_rate[confirmed_qty])
 		formatString: #,0.00
 
 	/// Sum of fill loss qty across the current filter context.
